@@ -1,0 +1,208 @@
+@font-face {
+    font-family: 'Knockout';
+    src: url('../fonts/league-gothic.eot');
+    src: url('../fonts/league-gothic.eot?#iefix') format('embedded-opentype'), url('../fonts/league-gothic.woff') format('woff'), url('../fonts/league-gothic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'MrsEaves';
+    src: url('../fonts/mr-eaves-sans-r.eot');
+    src: url('../fonts/mr-eaves-sans-r.eot?#iefix') format('embedded-opentype'), url('../fonts/mr-eaves-sans-r.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.admin-color-midnight #wpwrap {
+    background: url(../../admin/img/bg.png) #f5f5f5;
+}
+
+.admin-color-midnight #wp-admin-bar-user-info .avatar {
+    border-radius: 100px;
+    border: 3px solid #eee;
+}
+
+.admin-color-midnight #wpadminbar,
+#wpadminbar * {
+    line-height: 36px;
+}
+
+#aioseop_snippet > h3 {
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
+}
+
+#aiosp div.preview_snippet {
+    padding: 10px;
+}
+
+.aioseop_input p {
+    display: none;
+}
+
+.aioseop_option_label {
+    height: auto !important;
+    margin-bottom: 10px;
+}
+
+#aiosp .inside {
+    display: table;
+}
+
+.aioseop_label {
+    padding-left: 15px;
+}
+
+.admin-color-midnight #adminmenu,
+.admin-color-midnight #adminmenuback,
+.admin-color-midnight #adminmenuwrap,
+.admin-color-midnight #wpadminbar {
+    background: url(../../admin/img/work-bg.png) #383935;
+}
+
+#adminmenu .awaiting-mod,
+#adminmenu .update-plugins {
+    line-height: 15px;
+}
+
+#adminmenu li .awaiting-mod span,
+#adminmenu li span.update-plugins span {
+    line-height: 14px;
+}
+
+#login {
+    position: relative;
+    z-index: 1;
+}
+
+.login h1 a {
+    background: none !important;
+    margin-bottom: 10px;
+    background-size: auto 100% !Important;
+    width: 100%;
+}
+
+#wpfooter {
+    width: 300px;
+    background-image: url(../../admin/img/FIWI-classic-website.svg);
+    background-size: 300px auto;
+    background-position: 50%;
+    background-repeat: no-repeat;
+}
+
+#wpfooter p,
+#wpfooter a {
+    color: rgba(0, 0, 0, 0);
+}
+
+.wp-admin #wpadminbar #wp-admin-bar-site-name>.ab-item:before {
+    color: rgba(0, 0, 0, 0) !important;
+    background: url(../../admin/img/admin-logo.png) !important;
+    background-size: auto 100% !important;
+    background-repeat: no-repeat !important;
+    background-position: 50% !important;
+}
+
+.acf-field .acf-label label {
+    line-height: 2 !important;
+}
+
+div#aioseop_snippet > h3 {
+    line-height: 1.5;
+    padding: 0 !important;
+    margin: 0;
+}
+
+#aiosp div.preview_snippet {
+    padding: 10px 15px !important;
+    border-radius: 3px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.aioseop_input p {
+    display: none;
+}
+
+.aioseop_input .aioseop_option_label {
+    height: auto !important;
+    margin-bottom: 10px;
+}
+
+#aiosp .inside {
+    display: table;
+    width: 100%;
+}
+
+.aioseop_label {
+    padding-left: 15px;
+}
+
+#aio-pro-update {
+    display: none;
+}
+
+div#aiosp_upgrade_wrapper {
+    display: none;
+}
+
+.aioseop_option_div {
+    overflow: visible;
+}
+
+#aiosp_snippet_wrapper .aioseop_input.aioseop_top_label > span {
+    float: none;
+    display: inline-block;
+}
+
+#aiosp_snippet_wrapper .aioseop_input {
+    display: inline-block;
+    min-width: 150px;
+    width: 37%;
+    max-width: 269px;
+    padding: 0;
+    vertical-align: top;
+}
+
+#aiosp_snippet_wrapper .aioseop_input.aioseop_top_label {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+@media screen and (max-width: 782px) {}
+
+
+
+#adminmenu li.menu-top {
+    display: none;
+}
+
+li#toplevel_page_edit-post_type-acf-field-group.menu-top , li#toplevel_page_acf-options-display-options.menu-top , li#menu-posts-clients.menu-top, li#menu-settings.menu-top, li#menu-pages.menu-top  {
+
+    display: block;
+}
+
+#dashboard-widgets .postbox-container, #wpbody-content #dashboard-widgets.columns-4 .postbox-container {
+    width: 50% !important;
+}
+
+.metabox-holder .postbox-container .empty-container {border: none !important;}
+
+.inside .iframe-container {
+    position: relative;
+    padding-bottom: 100%;
+    padding-top: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.inside .iframe-container iframe {
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

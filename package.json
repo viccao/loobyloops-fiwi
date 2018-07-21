@@ -1,0 +1,48 @@
+{
+  "name": "Smores",
+  "version": "1.3.0",
+  "description": "Foundation Based Wordpress Starter Kit",
+  "main": "Gulpfile.js",
+  "scripts": {
+    "postinstall": "composer install && gulp",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "develop": "gulp"
+  },
+  "author": "Findsome & Winmore",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/findsomewinmore/smores"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^6.0.3",
+    "babel-core": "^6.2.1",
+    "babel-preset-es2015": "^6.1.18",
+    "cssnano": "^3.3.2",
+    "foundation-sites": "^6.2.1",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.1",
+    "gulp-concat": "^2.5.2",
+    "gulp-imagemin": "^2.4.0",
+    "gulp-load-plugins": "^0.8.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-postcss": "^6.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.1",
+    "gulp-size": "^1.1.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.0.1",
+    "gulp-uncss": "^1.0.6",
+    "imagemin-pngquant": "^4.2.0",
+    "merge-stream": "^0.1.7",
+    "through2": "^2.0.1"
+  },
+  "dependencies": {
+    "browser-sync": "^2.18.13",
+    "emoji-js": "^3.4.1",
+    "gulp-modernizr": "^1.0.0-alpha",
+    "html5shiv": "^3.7.3",
+    "poly-fluid-sizing": "^1.1.0",
+    "respond.js": "^1.4.2"
+  }
+}

@@ -1,0 +1,25 @@
+/* Modify this as needed. This will pull in your scss so that
+ * the editor matches the front end.
+ */
+
+@import 
+  'base/variables', 
+  'vendor/normalize',
+  '../../node_modules/foundation-sites/scss/foundation',
+  'base/typography'; 
+
+@import 
+  'layout/main',
+  'layout/sidebar';
+
+// Components
+//  @import 
+//    'components/name';
+
+// Utils
+@import 
+  'utils/mixins',
+
+@import 
+  'shame';
+

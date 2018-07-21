@@ -1,0 +1,224 @@
+
+@import '../../../node_modules/poly-fluid-sizing/poly-fluid-sizing.scss';
+
+  html {
+
+      @include poly-fluid-sizing('font-size', (320px: 10px, 768px: 9px, 1024px: 8px, 1440px: 10px));
+
+}
+
+
+.board {
+
+
+  .flapper {
+
+    font-family: Roboto Condensed, sans-serif;
+    font-weight: 300;
+    box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    .digit {
+      position: relative;
+      display: inline-block;
+      box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      -webkit-box-sizing: content-box;
+      div {
+        position: absolute;
+        text-align: center;
+        box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        -webkit-box-sizing: content-box;
+      }
+      .top {
+        top: 0px;
+        left: 0px;
+        overflow: hidden;
+      }
+      .bottom {
+        bottom: 0px;
+        left: 0px;
+        overflow: hidden;
+      }
+    }
+    &.XXL {
+      font-size: 7.5rem;
+      line-height: 1.06;
+      height: 9.42rem;
+      text-align: left;
+      margin-left: 0;
+
+      &.time {
+
+
+        text-align: right;
+      }
+      .digit {
+        border-radius: 8px;
+        div {
+          border-radius: 6px;
+          height: 9.14rem;
+          width: 3.25rem;
+          font-size: inherit;
+          line-height: inherit;
+        }
+        height: 9.14rem;
+        width: 3.25rem;
+        font-size: inherit;
+        line-height: inherit;
+        .top {
+          clip: rect(0px, 6.85714rem, calc(4rem), 0px);
+        }
+        .bottom {
+          clip: rect(calc(4.1rem), 6.85714rem, 8rem, 0px);
+        }
+      }
+    }
+    .digit {
+      border: 1px solid #fff;
+      div {
+        //  color: black;
+        padding: 0px;
+        //  background: url(../img/home-clouds.jpg);
+        //  background-attachment: fixed;
+        //  background-size: cover;
+        //  background-position: 50%;
+        background: #303030;
+        color: white;
+      }
+    }
+    &.light .digit {
+      border: 1px solid #ddd;
+      //  background-color: #eee;
+      div {
+        color: black;
+        padding: 0px;
+        //  background-color: #f6f6f6;
+      }
+    }
+    &.XXL {
+      /*            line-height: 1.25;*/
+    }
+    .digit {
+      div {
+        //  background: #303030;
+      }
+      //  background: none;
+      border: none;
+    }
+  }
+  /* SIZE STYLES */
+  /* XXL 96x128 */
+  /* THEME STYLES */
+  /* DARK (default) */
+  /* LIGHT */
+  .page {
+    width: 100%;
+    margin: 30px auto 0;
+  }
+  h1 {
+    text-align: center;
+    font-size: 24px;
+  }
+  .displays {
+    padding: 30px;
+    border: 10px solid #ccc;
+    background-color: #222;
+    border-radius: 30px;
+    box-shadow: 0 0 12px 4px #000 inset;
+    text-transform: uppercase;
+  }
+  .flapper {
+    margin-bottom: 2px;
+    text-align: center;
+  }
+  .inputarea {
+    margin: 24px 0;
+  }
+  #typesomething,
+  #showme {
+    font-family: Roboto Condensed;
+    font-size: 18px;
+    padding: 14px;
+    background-color: #EEE;
+    color: #333;
+    border: 0;
+    height: 170px;
+  }
+  #typesomething {
+    width: 300px;
+  }
+  #showme {
+    &:hover {
+      background-color: #DDD;
+    }
+    &:active {
+      background-color: #CCC;
+    }
+  }
+  div {
+    &.inline {
+      display: inline-block;
+      vertical-align: bottom;
+    }
+    &.activity {
+      width: 12px;
+      height: 12px;
+      border-radius: 6px;
+      background: none;
+      position: relative;
+      top: 33px;
+      left: -15px;
+      &.active {
+        background-color: #f00;
+      }
+    }
+  }
+  .digit {
+    text-transform: uppercase;
+    /*                background: none !important;*/
+    font-family: 'Knockout', fontawesome;
+    font-weight: normal;
+  }
+  .back {
+    /*                background: none !important;*/
+  }
+  /* Greetz @deadlyicon
+             * https://gist.github.com/2191622
+             */
+  #fork-me {
+    width: 180px;
+    height: 150px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    overflow: hidden;
+    a {
+      display: block;
+      position: absolute;
+      top: 35px;
+      right: -75px;
+      padding: 0.75em 4em;
+      background: #881c15;
+      -webkit-transform: rotate(40deg);
+      -moz-transform: rotate(40deg);
+      -o-transform: rotate(40deg);
+      -ms-transform: rotate(40deg);
+      color: white !important;
+      font-weight: bold;
+      font-family: helvetica;
+      text-decoration: none;
+      border: 1px solid white;
+      box-shadow: 0 0 10px black;
+      text-shadow: 0 0 10px black;
+      white-space: nowrap;
+    }
+  }
+}
+//.back.top {
+//  position: relative !important;
+//}
+//.back.bottom {
+//  opacity: 0;
+//}

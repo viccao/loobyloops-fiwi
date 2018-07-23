@@ -7,6 +7,9 @@ const plugins = require('gulp-load-plugins')({ camelize: true });
 const through = require('through2');
 const browserSync = require('browser-sync').create();
 const sourcemaps = require('gulp-sourcemaps');
+const jsImport = require('gulp-js-import');
+//const emojiText = require("emoji-text");
+
 // browser-sync task for starting the server.
 gulp.task('browser-sync', function() {
     //watch files
@@ -77,6 +80,7 @@ gulp.task('scripts', () => {
       'src/js/**/*.js',
       '!src/js/vendor/*.js'
     ])
+    .pipe(jsImport({hideConsole: true}))
     .pipe(plugins.plumber())
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.babel())

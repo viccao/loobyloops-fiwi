@@ -21,20 +21,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/emoji-js@3.4.1/lib/emoji.min.js" type="text/javascript"></script>
   <script src="https://unicodey.com/js-emoji/lib/jquery.emoji.js" type="text/javascript"></script>
-
-<script>
-    var previous = null;
-    var current = null;
-    setInterval(function() {
-        $.getJSON("/wp-json/acf/v2/options/", function(json) {
-            current = JSON.stringify(json);
-            if (previous && current && previous !== current) {
-                console.log('refresh');
-                location.reload();
-            }
-            previous = current;
-        });
-    }, 5000);
-</script>
   </body>
 </html>

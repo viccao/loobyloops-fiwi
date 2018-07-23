@@ -34,7 +34,7 @@
                             <img class="bg" src="<?php $attachment_id = get_sub_field('client_image'); $size = "full"; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
                             <?php } else { ?>
                             <video autoplay="" loop="" muted="" id="bgvid">
-                                <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds.mp4" type="video/mp4">
+                                <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
                             </video>
                             <?php } ?>
                             <?php $color = get_sub_field('bg_color'); $opacity = get_sub_field('background_opacity');?>
@@ -71,7 +71,7 @@
                                     console.log('Current Time:' + currentTime);
                                     if ('<?php echo $lesstime;?>' == currentTime) {
                                         console.log('meeting time');
-                                        <?php update_field( 'override_slide_mode', 'No', 'options' );?>
+                                        <?php update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options'); ?>
                                         jQuery('.welcome').addClass('transition-to');
                                         setTimeout(function() {
                                         location.reload();
@@ -138,12 +138,12 @@
                     'maxResults' => 99,
                     'singleEvents' => TRUE,
                     'orderBy' => 'startTime',
-                    'timeMax' => date("c", strtotime(date("c") . ' +1 day')),
+                    'timeMax' => date("c", strtotime(date("c") . ' +12 hours')),
                     'timeMin' => date("c", mktime(0,0,0))
                     );
                     $events = $service->events->listEvents($calendarId, $optParams);
                     if(!empty($events->getItems())): ?>
-                    <div class="slide schedule schedule client video board" data-attr="10000">
+                    <div class="slide schedule schedule client video board" data-attr="20000">
                       <video autoplay="" loop="" muted="" id="bgvid">
                           <source src="<?php echo get_template_directory_uri(); ?>/dist/img/fiwi.mp4" type="video/mp4">
                       </video>
@@ -174,14 +174,14 @@
                       'maxResults' => 99,
                       'singleEvents' => TRUE,
                       'orderBy' => 'startTime',
-                      'timeMax' => date("c", strtotime(date("c") . ' +1 day')),
+                      'timeMax' => date("c", strtotime(date("c") . ' +12 hours')),
                       'timeMin' => date("c", mktime(0,0,0))
                       );
                       $events = $service->events->listEvents($calendarId, $optParams);
 
 
                     if(!empty($events->getItems())): ?>
-                    <div class="slide schedule schedule client video board" data-attr="10000">
+                    <div class="slide schedule schedule client video board" data-attr="20000">
                       <video autoplay="" loop="" muted="" id="bgvid">
                           <source src="<?php echo get_template_directory_uri(); ?>/dist/img/fiwi.mp4" type="video/mp4">
                       </video>
@@ -211,7 +211,7 @@
                       $json = file_get_contents('https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true');
                       $obj = json_decode($json);
                       ?>
-                    <div class="slide schedule schedule client video board" data-attr="10000" id="flight-status">
+                    <div class="slide schedule schedule client video board" data-attr="20000" id="flight-status">
                       <video autoplay="" loop="" muted="" id="bgvid">
                           <source src="<?php echo get_template_directory_uri(); ?>/dist/img/fiwi.mp4" type="video/mp4">
                       </video>
@@ -226,18 +226,20 @@
 
                                         $status = $member->profile->status_text;
                                         $presence = $member->presence;
+                                        $display_name = $member->profile->display_name;
+                                        $name = $member->name;
                                         ?>
-                                            <li id="<?php echo $member->name;?>" class="<?php echo $presence;?>"><img src="<?php echo $member->profile->image_72;?>"><?php echo $member->name;?>
+                                            <li id="<?php echo $member->name;?>" class="<?php echo $presence;?>"><img src="<?php echo $member->profile->image_72;?>"><?php if($display_name == ''): echo $name; else: echo $display_name; endif;?>
 
                                                 <?php
 
-                                                echo '<span class="' . $presence . '">
-                                                Status: ';
+                                                echo '<span class="' . $presence . '">';
                                                 if($status == ''):
-                                                echo '
-                                                <span class="emoji">' . $member->profile->status_emoji . '</span><span class="user-status"> ' . $presence .'</span>';
+                                                echo '<span class="emoji" data-src="' . $member->profile->status_emoji . '">' . $member->profile->status_emoji . '</span>';
+                                                echo '<span class="user-status"> ' . $presence .'</span>';
                                                 else:
-                                                echo '<span class="emoji">' . $member->profile->status_emoji . '</span><span class="user-status"> ' . $status . '</span>';
+                                                echo '<span class="emoji" data-src="' . $member->profile->status_emoji . '">' . $member->profile->status_emoji . '</span>';
+                                                echo '<span class="user-status"> ' . $status . '</span>';
                                                 endif;
                                                 echo '</span>';
 
@@ -323,11 +325,11 @@
                     if( have_rows('slides', $slide->ID) ):
                     // loop through the rows of data
                     while ( have_rows('slides', $slide->ID) ) : the_row();
-                    if( get_row_layout() == 'image' ){?>
+                    if( get_row_layout() == 'image' || get_row_layout() == 'website_screenshot' ){?>
                         <div class="slide image" data-attr="30000">
                             <img src="<?php $attachment_id = get_sub_field('image'); $size = " large "; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
                         </div>
-                    <?php } elseif ( get_row_layout() == 'client_video' ){?>
+                    <?php } elseif ( get_row_layout() == 'client_video' || get_row_layout() == 'video' ){?>
                         <div <?php /** If get Video Slide length **/ $videoLength = get_sub_field('video_length'); if($videoLength == '30000' || $videoLength == '60000'){?> data-attr='<?php echo $videoLength;?>' <?php }?> class="slide video client <?php if(get_sub_field('contain_video')): echo 'contain'; endif;?><?php if($videoLength == 'Full Video') { ?> video-full<?php }?>" <?php if(get_sub_field('video_bg_color')): echo 'style="background-color:' . get_sub_field('video_bg_color') . '"'; endif;?>>
                                                                 <video muted preload="none" src="<?php the_sub_field('video');?>">
                                                                 </video>

@@ -461,7 +461,7 @@ img.bg {
     list-style: none;
     padding: 0;
     margin: 0;
-    column-count: 4;
+    column-count: 3;
     width: 100%;
     align-self: center;
     li {
@@ -471,6 +471,11 @@ img.bg {
       font-weight: normal !important;
       color: white;
       line-height: 2;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+//      margin-bottom: 1rem;
       img {
         display: inline-block;
         width: 44px;
@@ -495,7 +500,8 @@ img.bg {
       }
       span {
         font-size: 3rem;
-        margin-left: 1rem;
+//        margin-left: 1rem;
+//        display: block;
         &.active {
           color: lawngreen;
         }
@@ -506,22 +512,29 @@ img.bg {
           color: white;
           margin: 0;
           padding: 0;
+//          display: inline;
+          &.user-status {
 
+
+          }
 
             &.emoji {
             font-size: 2.25rem;
-            margin: 0 .15rem;
+            margin: 0 .75rem 0 .15rem;
+            display: inline;
+
 
               img {
 
                 border: none;
                 border-radius: 0;
-                height: 2.5rem;
-                width: 2.5rem;
+                height: 2.5rem !important;
+                width: 2.5rem !important;
                 top: 0rem;
                 left: .25rem;
                 object-fit: contain;
                 object-position: 50%;
+                margin-right: -.05rem !important;
               }
             }
         }
@@ -536,8 +549,12 @@ img.bg {
   0%{		color: #F44336;	}
   100%{	color: transparent;	}
 }
+@keyframes statusUpdate{
+  0%{		opacity: 1	}
+  100%{	opacity: .5	}
+}
 
-.class {
+.updated {
 
-  display: initial;
+  animation: statusUpdate .5s alternate ease 10;
 }

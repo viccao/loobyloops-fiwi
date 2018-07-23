@@ -24,6 +24,7 @@
     "gulp-babel": "^6.1.1",
     "gulp-concat": "^2.5.2",
     "gulp-imagemin": "^2.4.0",
+    "gulp-js-import": "^1.0.6",
     "gulp-load-plugins": "^0.8.0",
     "gulp-plumber": "^1.0.1",
     "gulp-postcss": "^6.0.1",
@@ -40,6 +41,7 @@
   "dependencies": {
     "browser-sync": "^2.18.13",
     "emoji-js": "^3.4.1",
+    "emoji-text": "^0.2.6",
     "gulp-modernizr": "^1.0.0-alpha",
     "html5shiv": "^3.7.3",
     "poly-fluid-sizing": "^1.1.0",

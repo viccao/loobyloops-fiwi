@@ -80,7 +80,7 @@
                       var emoji = json.members[k].profile.status_emoji;
                       var current_emoji = $('.members-status li[id="' + member + '"] .emoji').attr('data-src');
                       var status = $('.members-status li[id="' + member + '"]').attr('class');
-                      if (previous && current && ((previous != current) || (status != current))) {
+                      if (((previous != current) || (status != current))) {
                       if(status_text == '') {
                       $('.members-status li[id="' + member + '"] .user-status').text(current);
                       } else {
@@ -131,7 +131,7 @@
 
 
                       }
-                      previous = current;
+                      status = current;
                       }
 //                      previous = presence;
                     });

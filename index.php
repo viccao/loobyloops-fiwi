@@ -71,7 +71,7 @@
                                     console.log('Current Time:' + currentTime);
                                     if ('<?php echo $lesstime;?>' == currentTime) {
                                         console.log('meeting time');
-                                        <?php update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options'); ?>
+                                        <?php delete_row('client_schedule', 1, 'options'); update_field( 'override_slide_mode', 'No', 'options' ); ?>
                                         jQuery('.welcome').addClass('transition-to');
                                         setTimeout(function() {
                                         location.reload();
@@ -208,7 +208,7 @@
                     <?php endif;
                             }
                       elseif($noslides % 4 == 0){
-                      $json = file_get_contents('https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true');
+                      $json = file_get_contents('https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true&pretty=true');
                       $obj = json_decode($json);
                       ?>
                     <div class="slide schedule schedule client video board" data-attr="20000" id="flight-status">

@@ -181,6 +181,7 @@
                 slick.slickPause();
               }, 500);
               $(video).on('ended', function () {
+                $(video).get(0).pause();
                 console.timeEnd('Slide Timer');
                 slick.slickNext();
               });
@@ -191,6 +192,7 @@
               }, 500);
               setTimeout(function () {
                 console.timeEnd('Slide Timer');
+                $(video).get(0).pause();
                 slick.slickNext();
               }, speed);
             }

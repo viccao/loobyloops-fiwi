@@ -102,7 +102,7 @@
             <?php } else {?>
                     <div class="fade">
                 <?php if( have_rows('client_schedule', 'options') ): ?>
-                    <div class="slide schedule schedule client video board" data-attr="6000">
+                    <div class="slide schedule schedule client board" data-attr="6000">
                     <video autoplay="" loop="" muted="" id="bgvid">
                         <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
                     </video>
@@ -143,10 +143,8 @@
                     );
                     $events = $service->events->listEvents($calendarId, $optParams);
                     if(!empty($events->getItems())): ?>
-                    <div class="slide schedule schedule client video board" data-attr="20000">
-                      <video autoplay="" loop="" muted="" id="bgvid">
-                          <source src="<?php echo get_template_directory_uri(); ?>/dist/img/fiwi.mp4" type="video/mp4">
-                      </video>
+                    <div class="slide schedule schedule client board" data-attr="20000" style="background: none;">
+
                       <div class="container-fluid">
                           <div class="row schedule-header">
                               <div class="col-md-12">
@@ -181,10 +179,8 @@
 
 
                     if(!empty($events->getItems())): ?>
-                    <div class="slide schedule schedule client video board" data-attr="20000">
-                      <video autoplay="" loop="" muted="" id="bgvid">
-                          <source src="<?php echo get_template_directory_uri(); ?>/dist/img/fiwi.mp4" type="video/mp4">
-                      </video>
+                    <div class="slide schedule schedule client board" data-attr="20000" style="background: none;">
+
                       <div class="container-fluid">
                           <div class="row schedule-header">
                               <div class="col-md-12">
@@ -211,10 +207,8 @@
                       $json = file_get_contents('https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true&pretty=true');
                       $obj = json_decode($json);
                       ?>
-                    <div class="slide schedule schedule client video board" data-attr="20000" id="flight-status">
-                      <video autoplay="" loop="" muted="" id="bgvid">
-                          <source src="<?php echo get_template_directory_uri(); ?>/dist/img/fiwi.mp4" type="video/mp4">
-                      </video>
+                    <div class="slide schedule schedule client board" data-attr="20000" id="flight-status" style="background: none;">
+
                       <div class="">
                         <div class="status">
 
@@ -256,9 +250,7 @@
                     <?php } elseif($noslides % 6 == 0){?>
                     <?php if( have_rows('client_schedule', 'options') ): ?>
                         <div class="slide schedule client video" data-attr="6000">
-                            <video autoplay="" loop="" muted="" id="bgvid">
-                                <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
-                            </video>
+
                         <div class="container-fluid">
                             <div class="row schedule-header">
                                 <div class="col-md-12">
@@ -372,6 +364,11 @@
                             // End foreach of selected clients for Slide Mode rotation
                           endforeach; ?>
                   </div>
+
+                  <video autoplay="" loop="" muted="" id="bgvid">
+                      <source src="https://s3.amazonaws.com/fw-devtools/fiwi-internal/assets/video/building.mp4" type="video/mp4">
+                  </video>
+
                <?php  // in Slide Mode: storing the first upcoming meeting time for live check refresh
                           if( have_rows('client_schedule', 'options') ): ?>
                     <?php $counter == 0; while ( have_rows('client_schedule', 'options') ) : the_row(); ?>

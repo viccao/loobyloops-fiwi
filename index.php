@@ -24,13 +24,13 @@
                         <?php $counter++; // Compare Scheduled Meeting Times against current time
                               $time = strtotime(get_sub_field('client_time', 'options')) + 300;
                               $currentTime = strtotime(current_time( 'H:i:s'));
-                                if($time > $currentTime) {?>
-                            <?php $welcomeType = get_sub_field('welcome_type');?>
-                            <?php if($welcomeType == 'Video' && get_sub_field('client_video')) {?>
+                                if($time > $currentTime || $welcome == 'Yes') {?>
+                            <?php $welcomeType = get_sub_field('video_or_image');?>
+                            <?php if($welcomeType == 'video' && get_sub_field('client_video')) {?>
                             <video autoplay="" loop="" muted="" id="bgvid">
                                 <source src="<?php the_sub_field('client_video');?>">
                             </video>
-                            <?php } elseif ($welcomeType == 'Image') {?>
+                            <?php } elseif ($welcomeType == 'image') {?>
                             <img class="bg" src="<?php $attachment_id = get_sub_field('client_image'); $size = "full"; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
                             <?php } else { ?>
                             <video autoplay="" loop="" muted="" id="bgvid">
@@ -41,8 +41,10 @@
                             <div id="overlay" <?php if(get_sub_field('bg_color') || get_sub_field('background_opacity')): echo 'style="background-color: ' . $color . '; opacity: ' . $opacity . '"'; endif;?>></div>
                             <div id="content" class="table-me">
                                 <div class="align-me align-top">
-                                <h1 class="large blinking">Now Boarding</h1>
-                                <div class="medium"><?php the_sub_field('client_name');?></div>
+                                <h1 class="large blinking"><?php if(get_sub_field('welcome_message')): echo get_sub_field('welcome_message'); else: echo 'Now Boarding'; endif;?> </h1>
+                                <div class="medium">
+                                  <p><em><?php the_sub_field('individual_names');?></em></p>
+                                  <p><strong><?php the_sub_field('client_name');?></strong></p>
                             </div>
                             </div>
                             <script>
@@ -71,32 +73,50 @@
                                     console.log('Current Time:' + currentTime);
                                     if ('<?php echo $lesstime;?>' == currentTime) {
                                         console.log('meeting time');
-                                        <?php delete_row('client_schedule', 1, 'options'); update_field( 'override_slide_mode', 'No', 'options' ); ?>
                                         jQuery('.welcome').addClass('transition-to');
+
                                         setTimeout(function() {
                                         location.reload();
                                         }, 500);
+
+
+
                                     }
                                 }
                                 startTime();
                             </script>
-                            <?php break; } else { ?>
-                                    <?php update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options'); ?>
+                              <?php if($currentTime > $lesstime):
+                               delete_row('client_schedule', 1, 'options');
+                               update_field( 'override_slide_mode', 'No', 'options' ); ?>
+                              <script>
+                              jQuery('.welcome').addClass('transition-to');
+                              setTimeout(function() {
+                              location.reload();
+                              }, 500);
+                            </script>
+                            <?php endif;?>
+
+
+                            <?php } else { ?>
+                                    <?php //update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options'); ?>
                                     <script>
-                                        location.reload();
+//                                        location.reload();
                                     </script>
                                     <?php }?>
                                         <?php endwhile ; wp_reset_postdata();
                                                $mode = get_field('override_slide_mode', 'options');
-                                                if($mode == 'Yes'):
-                                                update_field( 'override_slide_mode', 'No', 'options' );
+                                                if(($mode == 'Yes') && ($lesstime < $currentTime)):
+                                                delete_row('client_schedule', 1, 'options'); update_field( 'override_slide_mode', 'No', 'options' );
                                                 echo '<script>location.reload();</script>';
                                                 elseif($mode == 'No'):
                                                 update_field( 'override_slide_mode', 'No', 'options' );
-                                                endif ; ?>
+                                                else:
+
+                                                endif; ?>
                                             <?php // if no other upcoming meetings switch back to Slide Mode
                                                             } else { ?>
-                                                <?php update_field( 'override_slide_mode', 'No', 'options' ); echo '<script>location.reload();</script>'; ?>
+                                                <?php //update_field( 'override_slide_mode', 'No', 'options' );
+                                                    //echo '<script>location.reload();</script>'; ?>
                                                     <?php }?>
             </div>
             <?php } else {?>

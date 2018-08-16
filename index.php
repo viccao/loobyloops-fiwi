@@ -13,7 +13,12 @@
 * @since Smores 2.0
 */
 ?>
-<?php get_template_part('templates/head'); ?>
+<?php get_template_part('templates/head');
+
+
+      $meetingStatus = $_COOKIE['leaving_meeting'];
+
+?>
         <?php // Directy turn on Welcome Mode
                 $welcome = get_field('override_slide_mode','options');
                 if($welcome == 'Yes'){?>
@@ -24,7 +29,14 @@
                         <?php $counter++; // Compare Scheduled Meeting Times against current time
                               $time = strtotime(get_sub_field('client_time', 'options')) + 300;
                               $currentTime = strtotime(current_time( 'H:i:s'));
-                                if($time > $currentTime || $welcome == 'Yes') {?>
+
+                              if($meetingStatus == 'yes'):
+                              delete_row('client_schedule', 1, 'options');
+                              update_field( 'override_slide_mode', 'No', 'options' );
+                              echo '<script>Cookies.remove("leaving_meeting"); location.reload();</script>';
+                              endif;
+
+                                if($time < ($currentTime - 300) || $welcome == 'Yes') {?>
                             <?php $welcomeType = get_sub_field('video_or_image');?>
                             <?php if($welcomeType == 'video' && get_sub_field('client_video')) {?>
                             <video autoplay="" loop="" muted="" id="bgvid">
@@ -79,20 +91,21 @@
                                         location.reload();
                                         }, 500);
 
-
+                                        Cookies.set('leaving_meeting', 'yes');
 
                                     }
                                 }
                                 startTime();
                             </script>
-                              <?php if($currentTime > $lesstime):
+                              <?php if(($lesstime > $currentTime) && ($meetingStatus == 'yes')):
                                delete_row('client_schedule', 1, 'options');
-                               update_field( 'override_slide_mode', 'No', 'options' ); ?>
+                               update_field( 'override_slide_mode', 'No', 'options' );
+                              ?>
                               <script>
                               jQuery('.welcome').addClass('transition-to');
                               setTimeout(function() {
                               location.reload();
-                              }, 500);
+                              }, 1500);
                             </script>
                             <?php endif;?>
 
@@ -105,7 +118,7 @@
                                     <?php }?>
                                         <?php endwhile ; wp_reset_postdata();
                                                $mode = get_field('override_slide_mode', 'options');
-                                                if(($mode == 'Yes') && ($lesstime < $currentTime)):
+                                                if(($mode == 'Yes') && ($lesstime < $currentTime) && ($meetingStatus == 'yes')):
                                                 delete_row('client_schedule', 1, 'options'); update_field( 'override_slide_mode', 'No', 'options' );
                                                 echo '<script>location.reload();</script>';
                                                 elseif($mode == 'No'):

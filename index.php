@@ -16,27 +16,33 @@
 <?php get_template_part('templates/head');
 
 
-      $meetingStatus = $_COOKIE['leaving_meeting'];
+      $meetingOut = $_COOKIE['leaving_meeting'];
+      $meetingIn = $_COOKIE['entering_meeting'];
+      $meetings = $_COOKIE['no_meetings'];
+      $mode = $_COOKIE['mode'];
 
 ?>
         <?php // Directy turn on Welcome Mode
-                $welcome = get_field('override_slide_mode','options');
-                if($welcome == 'Yes'){?>
+                if($mode == 'welcome'){?>
             <div id="wrapper" class="welcome">
                 <?php  // Check if Schedule Meetings are present
-                                if( have_rows('client_schedule', 'options') ) { ?>
+                    if( have_rows('client_schedule', 'options') ) { ?>
                     <?php $counter == 0; while ( have_rows('client_schedule', 'options') ) : the_row();?>
                         <?php $counter++; // Compare Scheduled Meeting Times against current time
                               $time = strtotime(get_sub_field('client_time', 'options')) + 300;
                               $currentTime = strtotime(current_time( 'H:i:s'));
 
-                              if($meetingStatus == 'yes'):
+                              if($meetingOut == 'yes' && $time < $currentTime):
                               delete_row('client_schedule', 1, 'options');
-                              update_field( 'override_slide_mode', 'No', 'options' );
-                              echo '<script>Cookies.remove("leaving_meeting"); location.reload();</script>';
+
+                              echo '<script>
+                              Cookies.remove();
+                              Cookies.set("mode", "slides");
+                              location.reload();
+                              </script>';
                               endif;
 
-                                if($time < ($currentTime - 300) || $welcome == 'Yes') {?>
+                                if($mode == 'welcome') {?>
                             <?php $welcomeType = get_sub_field('video_or_image');?>
                             <?php if($welcomeType == 'video' && get_sub_field('client_video')) {?>
                             <video autoplay="" loop="" muted="" id="bgvid">
@@ -59,82 +65,45 @@
                                   <p><strong><?php the_sub_field('client_name');?></strong></p>
                             </div>
                             </div>
-                            <script>
-                                // Live time refresh against first upcoming meeting to switch back to Slide Mode or to Next Meeting
-                                function checkTime(i) {
-                                    if (i < 10) {
-                                        i = "0" + i;
-                                    }
-                                    return i;
-                                }
-                                function startTime() {
-                                    var today = new Date();
-                                    var h = today.getHours();
-                                    var m = today.getMinutes();
-                                    var s = today.getSeconds();
-                                    // add a zero in front of numbers<10
-                                    m = checkTime(m);
-                                    s = checkTime(s);
-                                    var currentTime = h + ":" + m + ":" + s;
-                                    t = setTimeout(function() {
-                                        startTime()
-                                    }, 500);
-                          <?php $meeting = strtotime(get_sub_field('client_time', 'options')) + 900;
-                                $lesstime = date('H:i:s', $meeting);?>
-                                    console.log('15 Min past meeting: <?php echo $lesstime;?>');
-                                    console.log('Current Time:' + currentTime);
-                                    if ('<?php echo $lesstime;?>' == currentTime) {
-                                        console.log('meeting time');
-                                        jQuery('.welcome').addClass('transition-to');
-
-                                        setTimeout(function() {
-                                        location.reload();
-                                        }, 500);
-
-                                        Cookies.set('leaving_meeting', 'yes');
-
-                                    }
-                                }
-                                startTime();
-                            </script>
-                              <?php if(($lesstime > $currentTime) && ($meetingStatus == 'yes')):
-                               delete_row('client_schedule', 1, 'options');
-                               update_field( 'override_slide_mode', 'No', 'options' );
-                              ?>
-                              <script>
-                              jQuery('.welcome').addClass('transition-to');
-                              setTimeout(function() {
-                              location.reload();
-                              }, 1500);
-                            </script>
-                            <?php endif;?>
-
 
                             <?php } else { ?>
-                                    <?php //update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options'); ?>
+                                    <?php //update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options');
+
+
+                              if($meetingOut == 'yes' && $time < $currentTime):
+                              delete_row('client_schedule', 1, 'options');
+                              update_field( 'override_slide_mode', 'No', 'options' );
+                              echo '<script>
+                              Cookies.remove();
+                              Cookies.set("mode", "slides");
+                              location.reload();
+                              </script>';
+                              endif;
+
+                              ?>
                                     <script>
 //                                        location.reload();
                                     </script>
                                     <?php }?>
                                         <?php endwhile ; wp_reset_postdata();
                                                $mode = get_field('override_slide_mode', 'options');
-                                                if(($mode == 'Yes') && ($lesstime < $currentTime) && ($meetingStatus == 'yes')):
+                                                if(($lesstime < $currentTime) && ($meetingOut == 'yes') && ($time < $currentTime)):
                                                 delete_row('client_schedule', 1, 'options'); update_field( 'override_slide_mode', 'No', 'options' );
-                                                echo '<script>location.reload();</script>';
-                                                elseif($mode == 'No'):
-                                                update_field( 'override_slide_mode', 'No', 'options' );
-                                                else:
-
+                                                echo '<script>
+                                                Cookies.remove();
+                                                Cookies.set("mode", "slides");
+                                                location.reload();
+                                                </script>';
                                                 endif; ?>
                                             <?php // if no other upcoming meetings switch back to Slide Mode
-                                                            } else { ?>
-                                                <?php //update_field( 'override_slide_mode', 'No', 'options' );
-                                                    //echo '<script>location.reload();</script>'; ?>
-                                                    <?php }?>
+                                                            } ?>
             </div>
             <?php } else {?>
                     <div class="fade">
-                <?php if( have_rows('client_schedule', 'options') ): ?>
+                <?php
+
+
+                          if( have_rows('client_schedule', 'options') ): ?>
                     <div class="slide schedule schedule client board" data-attr="6000">
                     <video autoplay="" loop="" muted="" id="bgvid">
                         <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
@@ -148,7 +117,15 @@
                     <?php while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
                     <?php $time = strtotime(get_sub_field('client_time', 'options'));
                           $currentTime = strtotime(current_time( 'H:i:s'));
-                            if($time < $currentTime): echo '<script>location.reload();</script>';endif;?>
+                            if(($meetingOut == 'yes') && ($time < $currentTime)):
+                              delete_row('client_schedule', 1, 'options');
+
+                              echo '<script>
+                              Cookies.remove();
+                              Cookies.set("mode", "slides");
+                              location.reload();
+                              </script>';
+                              endif;?>
 
                                       <div class="row">
                                           <div class="col-md-9 client-name">
@@ -305,37 +282,7 @@
                         </div>
                         <?php endwhile; ?>
                             </div>
-                                                            <script>
-                                                jQuery('.fade').on('afterChange', function (event, slick, currentSlide, nextSlide) {
-                                                                var hasVideo = $('.slick-active').hasClass('video');
-                                                                var video = $('.slick-active.video').find('video');
-                                                                var speed = $('.slick-active').attr('data-attr') - 1000;
-                                                                var VideoFull = $('.slick-active.video').hasClass('video-full');
-                                                                if (hasVideo == true) {
-                                                                    console.log('has video');
-                                                                    var slickSlide = $('.slick-active').attr('data-slick-index');
-                                                                }
-                                                                if(slick.currentSlide == slickSlide) {
-                                                                    console.log('current has video');
-                                                                $(video).get(0).play();
-                                                                if(VideoFull == true) {
-                                                                setTimeout(function () {
-                                                                    slick.slickPause();
-                                                                }, 500);
-                                                                $(video).on('ended', function () {
-                                                                    slick.slickPlay();
-                                                                })
-                                                                } else {
-                                                                setTimeout(function () {
-                                                                    slick.slickPause();
-                                                                }, 500);
-                                                                setTimeout(function () {
-                                                                    slick.slickPlay();
-                                                                }, speed);
-                                                                }
-                                                    }
-                                                });
-                                                </script>
+
                             </div>
                     <?php endif; ?>
                     <?php } else {?>
@@ -356,41 +303,10 @@
                         </div>
                     <?php } elseif ( get_row_layout() == 'client_video' || get_row_layout() == 'video' ){?>
                         <div <?php /** If get Video Slide length **/ $videoLength = get_sub_field('video_length'); if($videoLength == '30000' || $videoLength == '60000'){?> data-attr='<?php echo $videoLength;?>' <?php }?> class="slide video client <?php if(get_sub_field('contain_video')): echo 'contain'; endif;?><?php if($videoLength == 'Full Video') { ?> video-full<?php }?>" <?php if(get_sub_field('video_bg_color')): echo 'style="background-color:' . get_sub_field('video_bg_color') . '"'; endif;?>>
-                                                                <video muted preload="none" src="<?php the_sub_field('video');?>">
-                                                                </video>
-                                            <?php /** If get Video Slide length videoLength = get_sub_field('video_length'); if($videoLength == 'Full Video'){*/?>
-                                            <script>
-//                                            jQuery('.fade').on('afterChange', function (event, slick, currentSlide, nextSlide) {
-//                                                            var hasVideo = $('.slick-active').hasClass('video');
-//                                                            var video = $('.slick-active.video').find('video');
-//                                                            var speed = $('.slick-active').attr('data-attr');
-//                                                            var VideoFull = $('.slick-active.video').hasClass('video-full');
-//                                                            if (hasVideo == true) {
-//                                                                console.log('has video');
-//                                                                var slickSlide = $('.slick-active').attr('data-slick-index');
-//                                                            }
-//                                                            if(slick.currentSlide == slickSlide) {
-//                                                                console.log('current has video');
-//                                                            $(video).get(0).play();
-//                                                            if(VideoFull == true) {
-//                                                            setTimeout(function () {
-//                                                                slick.slickPause();
-//                                                            }, 500);
-//                                                            $(video).on('ended', function () {
-//                                                                slick.slickPlay();
-//                                                            })
-//                                                            } else {
-//                                                            setTimeout(function () {
-//                                                                slick.slickPause();
-//                                                            }, 500);
-//                                                            setTimeout(function () {
-//                                                                slick.slickPlay();
-//                                                            }, speed);
-//                                                            }
-//                                                }
-//                                            });
-                                            </script>
-                                                            </div>
+                        <video muted preload="none" src="<?php the_sub_field('video');?>">
+
+
+                        </div>
                     <?php } // Endif Layout == Client Video
                             // End of Client Slide repeater
                           endwhile; endif; }
@@ -402,48 +318,7 @@
                       <source src="https://s3.amazonaws.com/fw-devtools/fiwi-internal/assets/video/building.mp4" type="video/mp4">
                   </video>
 
-               <?php  // in Slide Mode: storing the first upcoming meeting time for live check refresh
-                          if( have_rows('client_schedule', 'options') ): ?>
-                    <?php $counter == 0; while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
-                            <script>
-                                // Live time refresh against first upcoming meeting to switch back to Slide Mode or to Next Meeting
-                                function checkTime(i) {
-                                    if (i < 10) {
-                                        i = "0" + i;
-                                    }
-                                    return i;
-                                }
-                                function startTime() {
-                                    var today = new Date();
-                                    var h = today.getHours();
-                                    var m = today.getMinutes();
-                                    var s = today.getSeconds();
-                                    // add a zero in front of numbers<10
-                                    h = checkTime(h);
-                                    m = checkTime(m);
-                                    s = checkTime(s);
-                                    var currentTime = h + ":" + m + ":" + s;
-                                    t = setTimeout(function() {
-                                        startTime()
-                                    }, 1000);
-                          <?php $meeting = strtotime(get_sub_field('client_time', 'options')) - 900;
-                                $lesstime = date('H:i:s', $meeting);?>
-                                    console.log('Meeting (15 Min Prior): <?php echo $lesstime;?>');
-                                    console.log('Current:' + currentTime);
-                                    if ('<?php echo $lesstime;?>' == currentTime) {
-                                        console.log('15 min before meeting...');
-                                        <?php update_field( 'override_slide_mode', 'Yes', 'options' );?>
-                                        jQuery('.welcome').addClass('transition-to');
-                                        setTimeout(function() {
-                                        location.reload();
-                                        }, 500);
-                                    }
-                                }
-                                $(window).load(function(){
-                                    startTime();
-                                })
-                            </script>
-                    <?php break; endwhile;  endif; ?>
+
                 <?php // Endif not in Welcome Mode - in Slide Mode
                 }?>
                     <?php get_template_part('templates/footer'); ?>

@@ -48,7 +48,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/emoji-js@3.4.1/lib/emoji.min.js" type="text/javascript"></script>
   <script src="https://unicodey.com/js-emoji/lib/jquery.emoji.js" type="text/javascript"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.js" type="text/javascript"></script>
 </head>
 
 <body <?php body_class() ?>>

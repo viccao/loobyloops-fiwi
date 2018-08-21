@@ -10,8 +10,6 @@
  * always reference jQuery with $, even when in .noConflict() mode.
  * ========================================================================
  **/
-
-
 (function ($) {
   // Use this variable to set up the common and page specific functions. If you
   // rename this variable, you will also need to rename the namespace below.
@@ -20,131 +18,182 @@
     'common': {
       init: function () {
         // JavaScript to be fired on all pages
+        //        var emojiText = require("emoji-text");
 
-//        var emojiText = require("emoji-text");
-        function Get(yourUrl){
-            var Httpreq = new XMLHttpRequest(); // a new request
-            Httpreq.open("GET",yourUrl,false);
-            Httpreq.send(null);
-            return Httpreq.responseText;
+        var mode = Cookies.get('mode');
+        function Get(yourUrl) {
+          var Httpreq = new XMLHttpRequest(); // a new request
+          Httpreq.open("GET", yourUrl, false);
+          Httpreq.send(null);
+          return Httpreq.responseText;
         }
         var index;
         var json_obj = JSON.parse(Get('https://slack.com/api/emoji.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6'));
         var emojis = json_obj.emoji;
-
-
         function loadEmoji() {
-
-              Object.keys(emojis).forEach(function(k){
-
-
-                $('span.emoji').each(function () {
-                  //                                            var userEmoji = $(this).children('span.emoji');
-                  var text = $(this).text().replace(':', '').replace(':', '');
-                  if (text == k) {
-                    $(this).html('<img src="' + emojis[k] + '">');
-                  } else {
-                    $(this).emoji();
-                  }
-                })
-
-
-
-              });
-
+          Object.keys(emojis).forEach(function (k) {
+            $('span.emoji').each(function () {
+              //                                            var userEmoji = $(this).children('span.emoji');
+              var text = $(this).text().replace(':', '').replace(':', '');
+              if (text == k) {
+                $(this).html('<img src="' + emojis[k] + '">');
+              } else {
+                $(this).emoji();
+              }
+            })
+          });
         }
+
+
+        var updateTimer = setInterval(updateACF, 1000);
+
         function updateACF() {
-              var previous = null;
-              var current = null;
-              setInterval(function () {
-                $.getJSON("/wp-json/acf/v2/options/", function (json) {
-                  current = JSON.stringify(json);
-                  if (previous && current && previous !== current) {
-                    console.log('refresh');
-                    location.reload();
+
+          var options = JSON.parse(Get('/wp-json/acf/v2/options/client_schedule'));
+            var meetingOut = Cookies.get('leaving_meeting');
+            var meetings = options.client_schedule;
+
+            if(meetings == false) {
+
+
+              Cookies.set('no meetings', 'yes');
+
+            }
+            if (meetings != false) {
+              Cookies.remove('no meetings');
+              var meetingTime = options.client_schedule[0].client_time;
+              var time = moment(meetingTime, 'H:mm:ss');
+              var timePlus = moment(meetingTime, 'H:mm:ss');
+              var meetingMinus15 = time.subtract(15, 'minutes');
+              var meetingPlus15 = timePlus.add(15, 'minutes');
+              var meetingMinus15 = moment(meetingMinus15).format('H:mm:ss');
+              var meetingPlus15 = moment(meetingPlus15).format('H:mm:ss');
+
+
+
+              function checkTime(i) {
+                if (i < 10) {
+                  i = "0" + i;
+                }
+                return i;
+              }
+              function startTime() {
+                var today = new Date();
+                var h = today.getHours();
+                var m = today.getMinutes();
+                var s = today.getSeconds();
+                // add a zero in front of numbers<10
+                m = checkTime(m);
+                s = checkTime(s);
+                var currentTime = h + ":" + m + ":" + s;
+                //              t = setTimeout(function() {
+                //                  startTime()
+                //              }, 500);
+
+
+//                var currentTime = moment(currentTime, 'h:mm:ss');
+                console.log('Current Time: ' + currentTime);
+                console.log('15 Min prior to meeting: ' + meetingMinus15);
+                console.log('15 Min after meeting: ' + meetingPlus15);
+
+                if ((meetingMinus15 <= currentTime) && (currentTime <= meetingPlus15)) {
+                  //                        jQuery('.welcome').addClass('transition-to');
+                  if(mode != 'welcome') {
+                  console.log('welcome mode time');
+                  Cookies.remove('leaving_meeting');
+                  Cookies.set('mode', 'welcome');
+                  Cookies.set('entering_meeting', 'yes');
+//                  alert('15 minutes before meeting');
+                  clearInterval(updateTimer);
+                  location.reload();
+
                   }
-                  previous = current;
-                });
-              }, 5000);
+
+                } else if ((currentTime == meetingPlus15) || ((currentTime > meetingPlus15))) {
+                if(mode != 'slides') {
+                  console.log('slide mode time');
+                  Cookies.remove('entering_meeting');
+                  Cookies.set('mode', 'slides');
+                  Cookies.set('leaving_meeting', 'yes');
+//                  alert('15 after before meeting');
+                  clearInterval(updateTimer);
+                  location.reload();
+                }
+                } else if(currentTime < meetingMinus15 && mode != 'slides'){
+                  Cookies.remove('entering_meeting');
+                  Cookies.remove('leaving_meeting');
+                  Cookies.set('mode', 'slides');
+//                  alert('switching back to slide mode');
+                  clearInterval(updateTimer);
+                  location.reload();
+                }
+              }
+              startTime();
+            }
         }
         function watchSlack() {
-              var previous = null;
-              var current = null;
-              setInterval(function () {
-                $.getJSON("https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true", function (json) {
-                    Object.keys(json.members).forEach(function (k) {
-                      if(json.members[k].deleted == false && json.members[k].is_bot == false && json.members[k].name != 'slackbot'){
-                      current = json.members[k].presence;
-                      var member = json.members[k].name;
-                      var status_text = json.members[k].profile.status_text;
-                      var emoji = json.members[k].profile.status_emoji;
-                      var current_emoji = $('.members-status li[id="' + member + '"] .emoji').attr('data-src');
-                      var status = $('.members-status li[id="' + member + '"]').attr('class');
-                      if (((previous != current) || (status != current))) {
-                      if(status_text == '') {
-                      $('.members-status li[id="' + member + '"] .user-status').text(current);
+          var meetingIn = Cookies.get('entering_meeting');
+          if (meetingIn != 'yes') {
+            var previous = null;
+            var current = null;
+            setInterval(function () {
+              $.getJSON("https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true", function (json) {
+                Object.keys(json.members).forEach(function (k) {
+                  if (json.members[k].deleted == false && json.members[k].is_bot == false && json.members[k].name != 'slackbot') {
+                    current = json.members[k].presence;
+                    var member = json.members[k].name;
+                    var status_text = json.members[k].profile.status_text;
+                    var emoji = json.members[k].profile.status_emoji;
+                    var current_emoji = $('.members-status li[id="' + member + '"] .emoji').attr('data-src');
+                    var status = $('.members-status li[id="' + member + '"]').attr('class');
+                    if (((previous != current) || (status != current))) {
+                      if (status_text == '') {
+                        $('.members-status li[id="' + member + '"] .user-status').text(current);
                       } else {
-                      $('.members-status li[id="' + member + '"] .user-status').text(status_text);
+                        $('.members-status li[id="' + member + '"] .user-status').text(status_text);
                         console.log('Updating ' + member + ' Status: ' + status_text + '(' + current + ')');
                       }
-                      $('.members-status li[id="' + member + '"]').attr('class' , current);
-                      $('.members-status li[id="' + member + '"] > span').attr('class' , current);
+                      $('.members-status li[id="' + member + '"]').attr('class', current);
+                      $('.members-status li[id="' + member + '"] > span').attr('class', current);
                       $('.members-status li[id="' + member + '"]').addClass('updated');
-                      setTimeout(function(){
-                      $('.members-status li[id="' + member + '"]').removeClass('updated');
+                      setTimeout(function () {
+                        $('.members-status li[id="' + member + '"]').removeClass('updated');
                       }, 5500);
-
-                        console.log('Updating ' + member + ' Status: ' + current);
-
-//                      var emojiText = emojiText.convert(emoji, {
-//                                      delimiter: ':'
-//                                      });
-
-                        var emojiReplaced;
-//
-                        if(current_emoji != emoji) {
-
-
-
-                          Object.keys(emojis).forEach(function(k){
-
-
-                            if(k == emoji.replace(':', '').replace(':', '')){
-
-                              $('.members-status li[id="' + member + '"] .emoji').html('<img src="' + emojis[k]  + '">');
-
-                              emojiReplaced = true;
-                            }
-
-                          });
-
-                          if(emojiReplaced != true) {
-
+                      console.log('Updating ' + member + ' Status: ' + current);
+                      //                      var emojiText = emojiText.convert(emoji, {
+                      //                                      delimiter: ':'
+                      //                                      });
+                      var emojiReplaced;
+                      //
+                      if (current_emoji != emoji) {
+                        Object.keys(emojis).forEach(function (k) {
+                          if (k == emoji.replace(':', '').replace(':', '')) {
+                            $('.members-status li[id="' + member + '"] .emoji').html('<img src="' + emojis[k] + '">');
+                            emojiReplaced = true;
+                          }
+                        });
+                        if (emojiReplaced != true) {
                           $('.members-status li[id="' + member + '"] .emoji').text(emoji);
                           $('.members-status li[id="' + member + '"] .emoji').emoji();
-
-                          }
-
-                          $('.members-status li[id="' + member + '"] .emoji').attr('data-src', emoji);
-
                         }
-
-
+                        $('.members-status li[id="' + member + '"] .emoji').attr('data-src', emoji);
                       }
-                      status = current;
-                      }
-//                      previous = presence;
-                    });
-                      console.timeEnd('Slack Update');
-                      console.time('Slack Update');
+                    }
+                    status = current;
+                  }
+                  //                      previous = presence;
                 });
-              }, 1 * 60 * 1000);
+                console.timeEnd('Slack Update');
+                console.time('Slack Update');
+              });
+            }, 1 * 60 * 1000);
+          }
         }
         $(document).ready(function () {
           console.time('Slack Update');
           loadEmoji();
           watchSlack();
-          updateACF();
+
         })
         $('.fade').slick({
           //                    draggable: false,
@@ -164,14 +213,14 @@
           var speed = $('.slick-active').attr('data-attr');
           var VideoFull = $('.slick-active.video').hasClass('video-full');
           if (hasVideo == true) {
-          var slickSlide = $('.slick-active').attr('data-slick-index');
+            var slickSlide = $('.slick-active').attr('data-slick-index');
             console.log('has video');
           }
           var i, output = "";
           // Start timing now
           console.time('Slide Timer');
           for (i = 1; i <= 1e6; i++)
-          output += i;
+            output += i;
           if (slick.currentSlide == slickSlide) {
             console.log('slide video start');
             $(video).get(0).play();
@@ -188,7 +237,7 @@
             } else {
               setTimeout(function () {
                 slick.slickPause();
-                console.log('slide will change in: ' + speed /1000 + 's');
+                console.log('slide will change in: ' + speed / 1000 + 's');
               }, 500);
               setTimeout(function () {
                 console.timeEnd('Slide Timer');
@@ -197,11 +246,11 @@
               }, speed);
             }
           } else {
-              console.log('slide will change in: ' + speed /1000 + 's');
-              setTimeout(function () {
-                console.timeEnd('Slide Timer');
-                slick.slickNext();
-              }, speed);
+            console.log('slide will change in: ' + speed / 1000 + 's');
+            setTimeout(function () {
+              console.timeEnd('Slide Timer');
+              slick.slickNext();
+            }, speed);
           }
         });
         $('.fade').on('beforeChange', function (event, slick, currentSlide, nextSlide) {

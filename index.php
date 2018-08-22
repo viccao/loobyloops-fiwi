@@ -32,7 +32,7 @@
                               $time = strtotime(get_sub_field('client_time', 'options')) + 300;
                               $currentTime = strtotime(current_time( 'H:i:s'));
 
-                              if($meetingOut == 'yes' && $time < $currentTime):
+                              if($meetingOut == 'yes' && $time > $currentTime):
                               delete_row('client_schedule', 1, 'options');
 
                               echo '<script>
@@ -117,7 +117,13 @@
                     <?php while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
                     <?php $time = strtotime(get_sub_field('client_time', 'options'));
                           $currentTime = strtotime(current_time( 'H:i:s'));
-                            if(($meetingOut == 'yes') && ($time < $currentTime)):
+
+
+                            echo '<script>
+                            console.log("Meeting time: ' . $time . ', Current time: ' . $currentTime . '");
+                            </script>
+                            ';
+                            if(($meetingOut == 'yes') && ($time > $currentTime)):
                               delete_row('client_schedule', 1, 'options');
 
                               echo '<script>

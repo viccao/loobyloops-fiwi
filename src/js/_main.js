@@ -96,9 +96,9 @@
                 console.log('15 Min prior to meeting: ' + meetingMinus15);
                 console.log('15 Min after meeting: ' + meetingPlus15);
 
-                if ((meetingMinus15 <= currentTime) && (currentTime <= meetingPlus15)) {
+                if ((meetingMinus15 <= currentTime) && (currentTime < meetingPlus15)) {
                   //                        jQuery('.welcome').addClass('transition-to');
-                  if(mode != 'welcome') {
+                  if(mode == 'slides') {
                   console.log('welcome mode time');
                   Cookies.remove('leaving_meeting');
                   Cookies.set('mode', 'welcome');
@@ -119,13 +119,23 @@
                   clearInterval(updateTimer);
                   location.reload();
                 }
-                } else if(currentTime < meetingMinus15 && mode != 'slides'){
+                } else if(currentTime > meetingMinus15 && mode != 'slides'){
                   Cookies.remove('entering_meeting');
                   Cookies.remove('leaving_meeting');
                   Cookies.set('mode', 'slides');
 //                  alert('switching back to slide mode');
                   clearInterval(updateTimer);
                   location.reload();
+                } else if(currentTime < meetingPlus15 && mode == 'slides') {
+
+                  console.log('welcome mode time');
+                  Cookies.remove('leaving_meeting');
+                  Cookies.set('mode', 'welcome');
+                  Cookies.set('entering_meeting', 'yes');
+//                  alert('15 minutes before meeting');
+                  clearInterval(updateTimer);
+                  location.reload();
+
                 }
               }
               startTime();

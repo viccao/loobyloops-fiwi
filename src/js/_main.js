@@ -272,10 +272,13 @@
               var text = $(this).attr('data-src');
               var spaceCount = text.length;
               console.log(spaceCount)
+
+              var timing = Math.floor(Math.random() * 300) + 100;
               var options = {
                 align: 'left',
                 width: spaceCount,
                 timing: 100
+//                timing: timing
               }
               $(this).flapper(options).val(text).change();
             });
@@ -283,10 +286,13 @@
               var text = $(this).attr('data-src');
               var spaceCount = text.length;
               console.log(spaceCount)
+              var timing = Math.floor(Math.random() * 300) + 100;
+
               var options = {
                 align: 'right',
                 width: spaceCount,
                 timing: 100
+//                timing: timing
               }
               $(this).flapper(options).val(text).change();
             });

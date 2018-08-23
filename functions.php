@@ -1490,7 +1490,7 @@ function fiwi_login_styles() {?>
 
 <style>
          .login h1 a {
-                background: url(http://koal.korealliance.staging.findsomewinmore.com/wp-content/themes/koal-korealliance/admin/img/fiwi-login.svg) no-repeat bottom center !important;
+                background: url(/wp-content/themes/smores-core/admin/img/fiwi-login.svg) no-repeat bottom center !important;
                 margin-bottom: 10px;
                 background-size: auto 100% !Important;
                 width: 100%;
@@ -1500,7 +1500,7 @@ function fiwi_login_styles() {?>
                 display: block;
                 width: 100%;
                 height: 30px;
-                background-image: url(http://koal.korealliance.staging.findsomewinmore.com/wp-content/themes/koal-korealliance/admin/img/FIWI-classic-website.svg);
+                background-image: url(/wp-content/themes/smores-core/admin/img/FIWI-classic-website.svg);
                 background-size: 100% auto;
                 background-position: 50% 100%;
                 background-repeat: no-repeat;

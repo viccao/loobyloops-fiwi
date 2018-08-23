@@ -13,7 +13,15 @@
 * @since Smores 2.0
 */
 ?>
-<?php get_template_part('templates/head');
+<?php
+
+      $ip = $_SERVER['REMOTE_ADDR'];
+
+      if($ip == '67.9.125.106'):
+
+
+
+      get_template_part('templates/head');
 
 
       $meetingOut = $_COOKIE['leaving_meeting'];
@@ -169,7 +177,7 @@
                           </div>
 
                                       <?php
-                                      foreach ($events->getItems() as $event):?>
+                                      $i = 0; foreach ($events->getItems() as $event): $i++; if($i < 4):?>
                                       <div class="row">
                                           <div class="col-md-9 client-name">
                                           <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
@@ -178,7 +186,7 @@
                                             <input class="hero dark XXL time" data-src="<?php $meetingtime = $event->getStart()->getDateTime(); echo date('g:i a', strtotime($meetingtime)); ?>">
                                           </div>
                                       </div>
-                                      <?php endforeach;?>
+                                      <?php endif; endforeach;?>
                           </div>
                         </div>
                     <?php endif; } elseif($noslides % 5 == 0){
@@ -205,7 +213,8 @@
                           </div>
                                   <?php
 
-                                      foreach ($events->getItems() as $event):?>
+                                      $i = 0; foreach ($events->getItems() as $event): $i++;
+                                      if($i < 4):?>
                                       <div class="row">
                                           <div class="col-md-10 client-name">
                                           <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
@@ -214,7 +223,7 @@
                                             <input class="hero dark XXL time" data-src="<?php $meetingtime = $event->getStart()->getDateTime(); echo date('g:i a', strtotime($meetingtime)); ?>">
                                           </div>
                                       </div>
-                                      <?php endforeach;?>
+                                      <?php endif; endforeach;?>
                           </div>
                         </div>
                     <?php endif;
@@ -327,4 +336,7 @@
 
                 <?php // Endif not in Welcome Mode - in Slide Mode
                 }?>
-                    <?php get_template_part('templates/footer'); ?>
+                    <?php get_template_part('templates/footer');
+                      else:
+                      header("Location: https://welcome.findsomewinmore.com/wp-admin");
+                      endif;?>

@@ -17,7 +17,7 @@
 
       $ip = $_SERVER['REMOTE_ADDR'];
 
-      if($ip == '67.9.125.106'):
+//      if($ip == '67.9.125.106'):
 
 
 
@@ -29,26 +29,133 @@
       $meetings = $_COOKIE['no_meetings'];
       $mode = $_COOKIE['mode'];
 
+
+
 ?>
+
+                <script>
+
+                  var refreshTimer = setInterval(watchRefresh, 1000);
+
+                  function Get(yourUrl) {
+                    var Httpreq = new XMLHttpRequest(); // a new request
+                    Httpreq.open("GET", yourUrl, false);
+                    Httpreq.send(null);
+                    return Httpreq.responseText;
+                  }
+
+                  function watchRefresh() {
+
+                  var options = JSON.parse(Get('/wp-json/acf/v2/options/refresh'));
+                  var refresh = options.refresh;
+
+                  if(refresh == 'Yes'){
+
+                    console.log('Refreshingggg');
+
+                    location.reload();
+
+                    <?php if(get_field('refresh', 'options')): update_field( 'refresh', null, 'options' ); endif;?>
+
+                  }
+
+                  }
+
+
+
+                </script>
+
+
         <?php // Directy turn on Welcome Mode
-                if($mode == 'welcome'){?>
+                if($mode == 'welcome'){
+
+
+
+                if($meetings == 'yes'):
+
+                  echo '<script>
+                  console.log("No meetings switching to slide mode");
+                  Cookies.set("entering_meeting", "no");
+                  Cookies.set("meeting_upcoming", "no");
+                  Cookies.set("mode", "slides");
+
+                  setTimeout(function(){
+                  location.reload();
+                  }, 1000);
+
+                  </script>';
+
+                endif;  ?>
+
+
+
+
             <div id="wrapper" class="welcome">
                 <?php  // Check if Schedule Meetings are present
                     if( have_rows('client_schedule', 'options') ) { ?>
                     <?php $counter == 0; while ( have_rows('client_schedule', 'options') ) : the_row();?>
                         <?php $counter++; // Compare Scheduled Meeting Times against current time
-                              $time = strtotime(get_sub_field('client_time', 'options')) + 300;
-                              $currentTime = strtotime(current_time( 'H:i:s'));
+                              if($counter == 1):
 
-                              if($meetingOut == 'yes' && $time > $currentTime):
-                              delete_row('client_schedule', 1, 'options');
+                              $time = strtotime(get_sub_field('client_time', 'options')) - 900;
+                              $currentTime = date('H:i');
+                              $meetingtime = strtotime(get_sub_field('client_time'));
+                              $meetingtimeAfter = strtotime(get_sub_field('client_time', 'options')) + 900;
+                              $meetingtimeDisplay = date('H:i a', $meetingtime);
+                              $meetingtimeComp = date('H:i', $time);
+                              $meetingtimeCompAfter = date('H:i', $meetingtimeAfter);
 
-                              echo '<script>
-                              Cookies.remove();
-                              Cookies.set("mode", "slides");
-                              location.reload();
-                              </script>';
-                              endif;
+                                echo '<script>
+                                console.log("Meeting time: ' . $meetingtimeComp . ', Current time: ' . $currentTime . '");
+                                </script>
+                                ';
+
+
+                                  if(($meetingtimeComp < $currentTime) && ($currentTime < $meetingtimeCompAfter)):
+    //                              delete_row('client_schedule', 1, 'options');
+
+                                  echo '<script>
+                                  console.log("Welcome Mode: Meeting Window");
+//                                  Cookies.remove();
+                                  Cookies.set("entering_meeting", "yes");
+                                  Cookies.set("mode", "welcome");
+//                                  location.reload();
+                                  </script>';
+
+                                  elseif(($meetingtimeComp > $currentTime) && ($currentTime < $meetingtimeCompAfter)):
+//                                  delete_row('client_schedule', 1, 'options');
+
+                                  echo '<script>
+                                  console.log("Slide Mode: Time is less than 15 min before AND 15 min after meeting");
+//                                  Cookies.remove();
+                                  Cookies.set("mode", "slides");
+                                  Cookies.set("meeting_upcoming", "no");
+                                  Cookies.remove("entering_meeting");
+                                  location.reload();
+                                  </script>';
+
+                                  elseif(($meetingtimeComp < $currentTime) && ($currentTime > $meetingtimeCompAfter)):
+                                  delete_row('client_schedule', 1, 'options');
+
+                                  echo '<script>
+                                  console.log("Slide Mode: Time is greater than 15 min before AND time is greater than 15 min after meeting");
+//                                  Cookies.remove();
+                                  Cookies.remove("entering_meeting");
+                                  Cookies.set("mode", "slides");
+                                  location.reload();
+                                  </script>';
+
+                                  elseif(($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter)):
+                                  delete_row('client_schedule', 1, 'options');
+
+                                  echo '<script>
+                                  console.log("Slide Mode: Time is less than 15 min before AND time is greater than 15 min after meeting");
+//                                  Cookies.remove();
+                                  Cookies.remove("entering_meeting");
+                                  Cookies.set("mode", "slides");
+                                  location.reload();
+                                  </script>';
+                                   endif;
 
                                 if($mode == 'welcome') {?>
                             <?php $welcomeType = get_sub_field('video_or_image');?>
@@ -78,11 +185,14 @@
                                     <?php //update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options');
 
 
-                              if($meetingOut == 'yes' && $time < $currentTime):
+                              if($meetingOut == 'yes' && (($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter))):
                               delete_row('client_schedule', 1, 'options');
                               update_field( 'override_slide_mode', 'No', 'options' );
                               echo '<script>
-                              Cookies.remove();
+                              console.log("Meeting window passed");
+//                              Cookies.remove();
+                              Cookies.set("meeting_upcoming", "no");
+                              Cookies.remove("entering_meeting");
                               Cookies.set("mode", "slides");
                               location.reload();
                               </script>';
@@ -93,12 +203,15 @@
 //                                        location.reload();
                                     </script>
                                     <?php }?>
-                                        <?php endwhile ; wp_reset_postdata();
+                                        <?php endif; endwhile ; wp_reset_postdata();
                                                $mode = get_field('override_slide_mode', 'options');
                                                 if(($lesstime < $currentTime) && ($meetingOut == 'yes') && ($time < $currentTime)):
                                                 delete_row('client_schedule', 1, 'options'); update_field( 'override_slide_mode', 'No', 'options' );
                                                 echo '<script>
-                                                Cookies.remove();
+                                                console.log("No Meetings but reloading to clear ACF Schedule");
+//                                                Cookies.remove();
+                                                Cookies.set("meeting_upcoming", "no");
+                                                Cookies.remove("entering_meeting");
                                                 Cookies.set("mode", "slides");
                                                 location.reload();
                                                 </script>';
@@ -123,30 +236,77 @@
                             </div>
                         </div>
                     <?php while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
-                    <?php $time = strtotime(get_sub_field('client_time', 'options'));
-                          $currentTime = strtotime(current_time( 'H:i:s'));
+                    <?php
 
 
-                            echo '<script>
-                            console.log("Meeting time: ' . $time . ', Current time: ' . $currentTime . '");
-                            </script>
-                            ';
-                            if(($meetingOut == 'yes') && ($time > $currentTime)):
-                              delete_row('client_schedule', 1, 'options');
+                              $time = strtotime(get_sub_field('client_time', 'options')) - 900;
+                              $currentTime = date('H:i');
+                              $meetingtime = strtotime(get_sub_field('client_time'));
+                              $meetingtimeAfter = strtotime(get_sub_field('client_time', 'options')) + 900;
+                              $meetingtimeDisplay = date('H:i a', $meetingtime);
+                              $meetingtimeComp = date('H:i', $time);
+                              $meetingtimeCompAfter = date('H:i', $meetingtimeAfter);
 
-                              echo '<script>
-                              Cookies.remove();
-                              Cookies.set("mode", "slides");
-                              location.reload();
-                              </script>';
-                              endif;?>
+                                echo '<script>
+                                console.log("Meeting time: ' . $meetingtimeComp . ', Current time: ' . $currentTime . '");
+                                </script>
+                                ';
+
+
+                                  if(($meetingtimeComp < $currentTime) && ($currentTime < $meetingtimeCompAfter)):
+    //                              delete_row('client_schedule', 1, 'options');
+
+                                  echo '<script>
+                                  console.log("Welcome Mode: Meeting Window");
+//                                  Cookies.remove();
+                                  Cookies.set("entering_meeting", "yes");
+                                  Cookies.set("mode", "welcome");
+                                  location.reload();
+                                  </script>';
+
+                                  elseif(($meetingtimeComp > $currentTime) && ($currentTime < $meetingtimeCompAfter)):
+//                                  delete_row('client_schedule', 1, 'options');
+
+                                  echo '<script>
+                                  console.log("Slide Mode: Time is less than 15 min before AND 15 min after meeting");
+//                                  Cookies.remove();
+                                  Cookies.set("mode", "slides");
+                                  Cookies.set("meeting_upcoming", "yes");
+                                  Cookies.remove("entering_meeting");
+//                                  location.reload();
+                                  </script>';
+
+                                  elseif(($meetingtimeComp < $currentTime) && ($currentTime > $meetingtimeCompAfter)):
+                                  delete_row('client_schedule', 1, 'options');
+
+                                  echo '<script>
+                                  console.log("Slide Mode: Time is greater than 15 min before AND time is greater than 15 min after meeting");
+//                                  Cookies.remove();
+                                  Cookies.remove("entering_meeting");
+                                  Cookies.set("meeting_upcoming", "no");
+                                  Cookies.set("mode", "slides");
+                                  location.reload();
+                                  </script>';
+
+                                  elseif(($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter)):
+//                                  delete_row('client_schedule', 1, 'options');
+
+                                  echo '<script>
+                                  console.log("Slide Mode: Time is less than 15 min before AND time is greater than 15 min after meeting");
+//                                  Cookies.remove();
+                                  Cookies.set("meeting_upcoming", "yes");
+                                  Cookies.set("mode", "slides");
+//                                  location.reload();
+                                  </script>';
+                                   endif;
+                                ?>
 
                                       <div class="row">
                                           <div class="col-md-9 client-name">
                                           <input class="hero dark XXL title" data-src="<?php remove_filter ('acf_the_content', 'wpautop'); echo get_sub_field('client_name', false, false);?>">
                                           </div>
                                           <div class="col-md-3 client-time">
-                                            <input class="hero dark XXL time" data-src="<?php $meetingtime = strtotime(get_sub_field('client_time')); echo date('g:i a', $meetingtime); ?>">
+                                            <input class="hero dark XXL time" data-src="<?php echo $meetingtimeDisplay; ?>">
                                           </div>
                                       </div>
                     <?php endwhile; ?>
@@ -176,14 +336,26 @@
                               </div>
                           </div>
 
-                                      <?php
-                                      $i = 0; foreach ($events->getItems() as $event): $i++; if($i < 4):?>
+                                  <?php
+                                      $currentTime = strtotime(current_time( 'H:i:s'));
+                                      $i = 0; foreach ($events->getItems() as $event):
+                                      $meetingtime = $event->getStart()->getDateTime();
+                                      $currentTime = date('g:i');
+                                      $meetingtimeComp = date('g:i', strtotime($meetingtime));
+//                                      $currentTimeComp = date('g:i', strtotime($currentTime));
+
+                                      if($meetingtimeComp > $currentTime): $i;
+                                      elseif(($i < 4) && ($meetingtimeComp < $currentTime)): $i++;
+
+//                                      echo 'Meeting Time:' . $meetingtimeComp;
+//                                      echo '<br>Current Time:' . $currentTime;
+                                      ?>
                                       <div class="row">
-                                          <div class="col-md-9 client-name">
+                                          <div class="col-md-10 client-name">
                                           <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
                                           </div>
-                                          <div class="col-md-3 client-time">
-                                            <input class="hero dark XXL time" data-src="<?php $meetingtime = $event->getStart()->getDateTime(); echo date('g:i a', strtotime($meetingtime)); ?>">
+                                          <div class="col-md-2 client-time">
+                                            <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
                                           </div>
                                       </div>
                                       <?php endif; endforeach;?>
@@ -212,15 +384,24 @@
                               </div>
                           </div>
                                   <?php
+                                      $currentTime = strtotime(current_time( 'H:i:s'));
+                                      $i = 0; foreach ($events->getItems() as $event):
+                                      $meetingtime = $event->getStart()->getDateTime();
+                                      $currentTime = date('g:i');
+                                      $meetingtimeComp = date('g:i', strtotime($meetingtime));
+//                                      $currentTimeComp = date('g:i', strtotime($currentTime));
+                                      if($meetingtimeComp > $currentTime): $i;
+                                      elseif(($i < 4) && ($meetingtimeComp < $currentTime)): $i++;
 
-                                      $i = 0; foreach ($events->getItems() as $event): $i++;
-                                      if($i < 4):?>
+//                                      echo 'Meeting Time:' . $meetingtimeComp;
+//                                      echo '<br>Current Time:' . $currentTime;
+                                      ?>
                                       <div class="row">
                                           <div class="col-md-10 client-name">
                                           <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
                                           </div>
                                           <div class="col-md-2 client-time">
-                                            <input class="hero dark XXL time" data-src="<?php $meetingtime = $event->getStart()->getDateTime(); echo date('g:i a', strtotime($meetingtime)); ?>">
+                                            <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
                                           </div>
                                       </div>
                                       <?php endif; endforeach;?>
@@ -283,9 +464,52 @@
                                 </div>
                             </div>
                         <?php while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
-                        <?php $time = strtotime(get_sub_field('client_time', 'options'));
-                              $currentTime = strtotime(current_time( 'H:i:s'));
-                                if($time < $currentTime): echo '<script>location.reload();</script>';endif;?>
+                    <?php
+
+
+//                          $time = strtotime(get_sub_field('client_time', 'options'));
+//                          $currentTime = strtotime(current_time( 'H:i:s'));
+                              $time = strtotime(get_sub_field('client_time', 'options')) + 300;
+                              $currentTime = date('g:i');
+                              $meetingtime = strtotime(get_sub_field('client_time'));
+                              $meetingtimeAfter = strtotime(get_sub_field('client_time', 'options')) + 300;
+                              $meetingtimeDisplay = date('g:i a', $meetingtime);
+                              $meetingtimeComp = date('g:i', $meetingtime);
+                              $meetingtimeCompAfter = date('g:i', $meetingtimeAfter);
+
+                            echo '<script>
+                            console.log("Meeting time: ' . $meetingtimeComp . ', Current time: ' . $currentTime . '");
+                            </script>
+                            ';
+                              if(($meetingtimeComp < $currentTime) && ($currentTime > $meetingtimeCompAfter)):
+                              delete_row('client_schedule', 1, 'options');
+
+                              echo '<script>
+                              Cookies.remove();
+                              Cookies.set("mode", "slides");
+                              location.reload();
+                              </script>';
+
+                              elseif(($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter)):
+                              delete_row('client_schedule', 1, 'options');
+
+                              echo '<script>
+                              Cookies.remove();
+                              Cookies.set("mode", "slides");
+                              location.reload();
+                              </script>';
+
+                              elseif(($meetingtimeComp > $currentTime) && ($currentTime < $meetingtimeCompAfter)):
+//                              delete_row('client_schedule', 1, 'options');
+
+                              echo '<script>
+                              Cookies.remove();
+                              Cookies.set("mode", "welcome");
+                              location.reload();
+                              </script>';
+
+
+                              endif;?>
                         <div class="row">
                             <div class="col-md-10 client-name">
                               <input class="hero dark XXL title" data-src="<?php the_sub_field('client_name');?>">
@@ -337,6 +561,8 @@
                 <?php // Endif not in Welcome Mode - in Slide Mode
                 }?>
                     <?php get_template_part('templates/footer');
-                      else:
-                      header("Location: https://welcome.findsomewinmore.com/wp-admin");
-                      endif;?>
+//                      else:
+//                      header("Location: https://welcome.findsomewinmore.com/wp-admin");
+//                      endif;
+
+                      ?>

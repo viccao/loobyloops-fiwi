@@ -20,7 +20,11 @@
         // JavaScript to be fired on all pages
         //        var emojiText = require("emoji-text");
 
+
+
+
         var mode = Cookies.get('mode');
+        var upcoming = Cookies.get('meeting_upcoming');
         function Get(yourUrl) {
           var Httpreq = new XMLHttpRequest(); // a new request
           Httpreq.open("GET", yourUrl, false);
@@ -52,6 +56,8 @@
           var options = JSON.parse(Get('/wp-json/acf/v2/options/client_schedule'));
             var meetingOut = Cookies.get('leaving_meeting');
             var meetings = options.client_schedule;
+
+
 
             if(meetings == false) {
 
@@ -86,9 +92,7 @@
                 m = checkTime(m);
                 s = checkTime(s);
                 var currentTime = h + ":" + m + ":" + s;
-                //              t = setTimeout(function() {
-                //                  startTime()
-                //              }, 500);
+
 
 
 //                var currentTime = moment(currentTime, 'h:mm:ss');
@@ -98,7 +102,7 @@
 
                 if ((meetingMinus15 <= currentTime) && (currentTime < meetingPlus15)) {
                   //                        jQuery('.welcome').addClass('transition-to');
-                  if(mode == 'slides') {
+                  if(mode == 'slides' && upcoming == 'yes') {
                   console.log('welcome mode time');
                   Cookies.remove('leaving_meeting');
                   Cookies.set('mode', 'welcome');
@@ -109,7 +113,7 @@
 
                   }
 
-                } else if ((currentTime == meetingPlus15) || ((currentTime > meetingPlus15))) {
+                } else if ((currentTime == meetingPlus15) || ((meetingMinus15 < currentTime > meetingPlus15))) {
                 if(mode != 'slides') {
                   console.log('slide mode time');
                   Cookies.remove('entering_meeting');
@@ -119,26 +123,58 @@
                   clearInterval(updateTimer);
                   location.reload();
                 }
-                } else if(currentTime > meetingMinus15 && mode != 'slides'){
+                } else if(currentTime < meetingMinus15 && mode != 'slides'){
                   Cookies.remove('entering_meeting');
                   Cookies.remove('leaving_meeting');
                   Cookies.set('mode', 'slides');
 //                  alert('switching back to slide mode');
                   clearInterval(updateTimer);
                   location.reload();
-                } else if(currentTime < meetingPlus15 && mode == 'slides') {
-
-                  console.log('welcome mode time');
-                  Cookies.remove('leaving_meeting');
-                  Cookies.set('mode', 'welcome');
-                  Cookies.set('entering_meeting', 'yes');
-//                  alert('15 minutes before meeting');
-                  clearInterval(updateTimer);
-                  location.reload();
-
                 }
+
+//                else if(currentTime < meetingPlus15 && mode == 'slides') {
+//
+//                  console.log('welcome mode time');
+//                  Cookies.remove('leaving_meeting');
+//                  Cookies.set('mode', 'welcome');
+//                  Cookies.set('entering_meeting', 'yes');
+////                  alert('15 minutes before meeting');
+//                  clearInterval(updateTimer);
+//                  location.reload();
+//
+//                }
               }
               startTime();
+            } else {
+
+
+              var restartTime = '8:00:00';
+
+              function checkTime(i) {
+                if (i < 10) {
+                  i = "0" + i;
+                }
+                return i;
+              }
+                var today = new Date();
+                var h = today.getHours();
+                var m = today.getMinutes();
+                var s = today.getSeconds();
+                // add a zero in front of numbers<10
+                m = checkTime(m);
+                s = checkTime(s);
+                var currentTime = h + ":" + m + ":" + s;
+
+                console.log(currentTime);
+
+                if (currentTime == restartTime ) {
+
+                  Cookies.remove('no meetings');
+                  location.reload();
+
+
+                }
+
             }
         }
         function watchSlack() {
@@ -271,13 +307,18 @@
             $('.slide[data-slick-index="' + nextSlide + '"] input.hero.title').each(function () {
               var text = $(this).attr('data-src');
               var spaceCount = text.length;
-              console.log(spaceCount)
+
+              if(spaceCount > 35){
+
+                spaceCount = 35;
+              }
+              console.log(spaceCount);
 
               var timing = Math.floor(Math.random() * 300) + 100;
               var options = {
                 align: 'left',
                 width: spaceCount,
-                timing: 100
+                timing: timing
 //                timing: timing
               }
               $(this).flapper(options).val(text).change();

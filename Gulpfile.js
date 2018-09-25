@@ -108,6 +108,7 @@ gulp.task('images', () => {
 
 // Build task
 gulp.task('build', ['styles', 'admin-styles', 'browser-sync', 'scripts', 'modernizr', 'images', 'fonts']);
+gulp.task('prod', ['styles', 'admin-styles', 'scripts', 'modernizr', 'images', 'fonts']);
 
 // Watch task
 gulp.task('watch', () => {
@@ -147,3 +148,4 @@ gulp.task('watch', () => {
 
 // Default task
 gulp.task('default', ['build', 'watch']);
+gulp.task('prod', ['build', 'watch']);

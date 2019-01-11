@@ -17,7 +17,7 @@
 
       $ip = $_SERVER['REMOTE_ADDR'];
 
-//      if($ip == '67.9.125.106'):
+      if($ip == '67.9.125.106'):
 
 
 
@@ -35,31 +35,45 @@
 
                 <script>
 
-                  var refreshTimer = setInterval(watchRefresh, 1000);
+                  (function ($) {
 
-                  function Get(yourUrl) {
-                    var Httpreq = new XMLHttpRequest(); // a new request
-                    Httpreq.open("GET", yourUrl, false);
-                    Httpreq.send(null);
-                    return Httpreq.responseText;
-                  }
+                      'use strict';
 
-                  function watchRefresh() {
+                    $(window).load(function(){
 
-                  var options = JSON.parse(Get('/wp-json/acf/v2/options/refresh'));
-                  var refresh = options.refresh;
+                        var refreshTimer = setInterval(watchRefresh, 60000);
 
-                  if(refresh == 'Yes'){
+                        function Get(yourUrl) {
+                          var Httpreq = new XMLHttpRequest(); // a new request
+                          Httpreq.open("GET", yourUrl, false);
+                          Httpreq.send(null);
+                          return Httpreq.responseText;
+                        }
 
-                    console.log('Refreshingggg');
+                        function watchRefresh() {
 
-                    location.reload();
+                        var options = JSON.parse(Get('/wp-json/acf/v2/options/refresh'));
+                        var refresh = options.refresh;
 
-                    <?php if(get_field('refresh', 'options')): update_field( 'refresh', null, 'options' ); endif;?>
+                        if(refresh == 'Yes'){
 
-                  }
+                          console.log('Refreshingggg');
 
-                  }
+                          location.reload();
+
+                          <?php if(get_field('refresh', 'options')): update_field( 'refresh', null, 'options' ); endif;?>
+
+                        }
+
+                        }
+
+                    });
+
+
+
+                  })(jQuery);
+
+
 
 
 
@@ -160,13 +174,13 @@
                                 if($mode == 'welcome') {?>
                             <?php $welcomeType = get_sub_field('video_or_image');?>
                             <?php if($welcomeType == 'video' && get_sub_field('client_video')) {?>
-                            <video autoplay="" loop="" muted="" id="bgvid">
+                            <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
                                 <source src="<?php the_sub_field('client_video');?>">
                             </video>
                             <?php } elseif ($welcomeType == 'image') {?>
                             <img class="bg" src="<?php $attachment_id = get_sub_field('client_image'); $size = "full"; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
                             <?php } else { ?>
-                            <video autoplay="" loop="" muted="" id="bgvid">
+                            <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
                                 <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
                             </video>
                             <?php } ?>
@@ -226,7 +240,7 @@
 
                           if( have_rows('client_schedule', 'options') ): ?>
                     <div class="slide schedule schedule client board" data-attr="6000">
-                    <video autoplay="" loop="" muted="" id="bgvid">
+                    <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
                         <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
                     </video>
                     <div class="container-fluid">
@@ -542,7 +556,7 @@
                         </div>
                     <?php } elseif ( get_row_layout() == 'client_video' || get_row_layout() == 'video' ){?>
                         <div <?php /** If get Video Slide length **/ $videoLength = get_sub_field('video_length'); if($videoLength == '30000' || $videoLength == '60000'){?> data-attr='<?php echo $videoLength;?>' <?php }?> class="slide video client <?php if(get_sub_field('contain_video')): echo 'contain'; endif;?><?php if($videoLength == 'Full Video') { ?> video-full<?php }?>" <?php if(get_sub_field('video_bg_color')): echo 'style="background-color:' . get_sub_field('video_bg_color') . '"'; endif;?>>
-                        <video muted preload="none" src="<?php the_sub_field('video');?>">
+                        <video id="video-<?php $var = sanitize_title_for_query( get_the_title($slide->ID) ); echo esc_attr( $var);?>" autoplay  muted preload="none" src="<?php the_sub_field('video');?>">
 
 
                         </div>
@@ -553,7 +567,7 @@
                           endforeach; ?>
                   </div>
 
-                  <video autoplay="" loop="" muted="" id="bgvid">
+                  <video  autoplay="" loop="" muted="" id="bgvid">
                       <source src="https://s3.amazonaws.com/fw-devtools/fiwi-internal/assets/video/building.mp4" type="video/mp4">
                   </video>
 
@@ -561,8 +575,8 @@
                 <?php // Endif not in Welcome Mode - in Slide Mode
                 }?>
                     <?php get_template_part('templates/footer');
-//                      else:
-//                      header("Location: https://welcome.findsomewinmore.com/wp-admin");
-//                      endif;
+                      else:
+                      header("Location: https://welcome.findsomewinmore.com/wp-admin");
+                      endif;
 
                       ?>

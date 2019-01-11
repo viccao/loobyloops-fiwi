@@ -46,8 +46,8 @@ $smores = new Smores(
         'lib/widgets',       // Add widget scripts
     ),
     array( // Assets
-        'css'             => '/dist/css/styles.min.css?rand=' .$rand,
-        'js'              => '/dist/js/scripts.min.js?rand=' .$rand,
+        'css'             => '/dist/css/styles.min.css',
+        'js'              => '/dist/js/scripts.min.js',
         'modernizr'       => '/dist/js/vendor/modernizr.min.js',
         'jquery'          => '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js',
         'jquery_fallback' => '/dist/js/vendor/jquery.min.js',
@@ -563,25 +563,25 @@ add_action( 'wp_dashboard_setup', 'add_display_clients_widget' );
 function display_clients_widget_function() {?>
 
 <div class="wrap">
-    <h1 class="wp-heading-inline">Recently Added Clients</h1>
+  <h1 class="wp-heading-inline">Recently Added Clients</h1>
 
-    <a href="/wp-admin/post-new.php?post_type=clients" class="page-title-action">Add New</a>
-    <a href="/wp-admin/edit.php?post_type=clients" class="page-title-action">All Clients</a>
-    <hr class="wp-header-end">
-    <form id="posts-filter" method="get">
-        <input type="hidden" name="post_status" class="post_status_page" value="all">
-        <input type="hidden" name="post_type" class="post_type_page" value="clients">
+  <a href="/wp-admin/post-new.php?post_type=clients" class="page-title-action">Add New</a>
+  <a href="/wp-admin/edit.php?post_type=clients" class="page-title-action">All Clients</a>
+  <hr class="wp-header-end">
+  <form id="posts-filter" method="get">
+    <input type="hidden" name="post_status" class="post_status_page" value="all">
+    <input type="hidden" name="post_type" class="post_type_page" value="clients">
 
-        <input type="hidden" id="_wpnonce" name="_wpnonce" value="4c375f9c30">
-        <input type="hidden" name="_wp_http_referer" value="/wp-admin/edit.php?post_type=clients">
+    <input type="hidden" id="_wpnonce" name="_wpnonce" value="4c375f9c30">
+    <input type="hidden" name="_wp_http_referer" value="/wp-admin/edit.php?post_type=clients">
 
-        <h2 class="screen-reader-text">Posts list</h2>
-        <table class="wp-list-table widefat fixed striped posts">
+    <h2 class="screen-reader-text">Posts list</h2>
+    <table class="wp-list-table widefat fixed striped posts">
 
 
-            <tbody id="the-list">
+      <tbody id="the-list">
 
-<?php $args = array(
+        <?php $args = array(
 
     'posts_per_page' => 10,
     'orderby' => 'date' ,
@@ -592,32 +592,30 @@ $loop = new WP_Query( $args );
 while ( $loop->have_posts() ) : $loop->the_post(); ?>
 
 
+        <tr id="post-80" class="iedit author-self level-0 post-80 type-clients status-publish hentry">
+
+          <td class="title column-title has-row-actions column-primary page-title" data-colname="Title">
+            <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
+            <strong><a class="row-title" href="/wp-admin/post.php?post=<?php echo get_the_ID();?>&amp;action=edit" aria-label="“<?php echo get_the_title();?>” (Edit)">
+                <?php echo get_the_title();?></a></strong>
+
+          </td>
+        </tr>
 
 
-                <tr id="post-80" class="iedit author-self level-0 post-80 type-clients status-publish hentry">
+        <?php endwhile; wp_reset_postdata();?>
 
-                    <td class="title column-title has-row-actions column-primary page-title" data-colname="Title">
-                        <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
-                        <strong><a class="row-title" href="/wp-admin/post.php?post=<?php echo get_the_ID();?>&amp;action=edit" aria-label="“<?php echo get_the_title();?>” (Edit)"><?php echo get_the_title();?></a></strong>
+      </tbody>
 
-                    </td>
-                </tr>
+      </tfoot>
 
+    </table>
 
-    <?php endwhile; wp_reset_postdata();?>
+  </form>
 
-            </tbody>
-
-            </tfoot>
-
-        </table>
-
-    </form>
-
-    <div id="ajax-response"></div>
-    <br class="clear">
+  <div id="ajax-response"></div>
+  <br class="clear">
 </div>
-
 
 
 <?php }
@@ -625,51 +623,130 @@ while ( $loop->have_posts() ) : $loop->the_post(); ?>
 
 function frontheader() {?>
 <script>
-jQuery(document).ready(function($) {
+  jQuery(document).ready(function($) {
 
-if ( window.location !== window.parent.location ) {		  $('body').addClass('in-iframe');	$('html').addClass('in-iframe')	}
-$(window).load(function(){
+    if (window.location !== window.parent.location) {
+      $('body').addClass('in-iframe');
+      $('html').addClass('in-iframe')
+    }
+    $(window).load(function() {
 
+      var iframeHeight = $('#display-options').outerHeight(),
+        containerHeight = $(window).outerHeight();
+      $('#display_options_widget .iframe-container').css('min-height', (containerHeight - iframeHeight + 400));
 
-var iframeHeight = $('#display-options').outerHeight(),
-containerHeight = $(window).outerHeight();
-$('#display_options_widget .iframe-container').css('min-height', (containerHeight - iframeHeight + 400));
+      // jQuery(document).ready(function($) {
+      // if( acf.fields.color_picker ) {
+      // // custom colors
+      // var palette = [
+      //     "#eb3a24",
+      //     "#323430"];
 
-// jQuery(document).ready(function($) {
-// if( acf.fields.color_picker ) {
-// // custom colors
-// var palette = [
-//     "#eb3a24",
-//     "#323430"];
+      // // when initially loaded find existing colorpickers and set the palette
+      // acf.add_action('load', function() {
+      // $('input.wp-color-picker').each(function() {
+      // $(this).iris('option', 'palettes', palette);
+      // });
+      // });
 
-// // when initially loaded find existing colorpickers and set the palette
-// acf.add_action('load', function() {
-// $('input.wp-color-picker').each(function() {
-// $(this).iris('option', 'palettes', palette);
-// });
-// });
+      // // if appended element only modify the new element's palette
+      // acf.add_action('append', function(el) {
+      // $(el).find('input.wp-color-picker').iris('option', 'palettes', palette);
+      // });
+      // }
+      // });
 
-// // if appended element only modify the new element's palette
-// acf.add_action('append', function(el) {
-// $(el).find('input.wp-color-picker').iris('option', 'palettes', palette);
-// });
-// }
-// });
+      $(window).resize(function() {
 
- $(window).resize(function () {
+        var iframeHeight = $('#display-options').outerHeight(),
+          containerHeight = $(window).outerHeight();
+        $('#display_options_widget .iframe-container').css('min-height', (containerHeight - iframeHeight));
 
-var iframeHeight = $('#display-options').outerHeight(),
-containerHeight = $(window).outerHeight();
-$('#display_options_widget .iframe-container').css('min-height', (containerHeight - iframeHeight));
+      });
 
- });
+    });
 
-});
+  });
 
-});
 </script>
 <style>
-.in-iframe #adminmenu,.in-iframe #adminmenuback,.in-iframe #screen-meta-links,.in-iframe #screen-meta-links .show-settings,.in-iframe #wpfooter,.in-iframe .admin-color-midnight h1,.in-iframe div#submitdiv button.handlediv.button-link,.in-iframe div#wpadminbar,.in-iframe h1,.in-iframe h2.hndle.ui-sortable-handle{display:none}.in-iframe.auto-fold #wpcontent,.in-iframe.auto-fold #wpfooter{margin:0!important}.in-iframe,.in-iframe #wpwrap{background:0 0!important}html.wp-toolbar.in-iframe{padding:0!important}.in-iframe #major-publishing-actions{background:0 0;border:none}.in-iframe .postbox .inside{border:none}.in-iframe div#submitdiv{border:none;margin:0;box-shadow:none}.in-iframe button.handlediv.button-link{display:none!important}.in-iframe #wpbody-content{padding-bottom:0}.in-iframe .wrap.acf-settings-wrap{margin:0}.in-iframe div#wpcontent{padding:0}.in-iframe div#poststuff{padding:0 5px}.in-iframe #post-body.columns-2 #postbox-container-1{float:none;width:100%;margin:0}.in-iframe #poststuff #post-body.columns-2 #side-sortables{width:100%;min-height:0}.in-iframe #poststuff #post-body.columns-2 {margin-right: 0;}
+  .in-iframe #adminmenu,
+  .in-iframe #adminmenuback,
+  .in-iframe #screen-meta-links,
+  .in-iframe #screen-meta-links .show-settings,
+  .in-iframe #wpfooter,
+  .in-iframe .admin-color-midnight h1,
+  .in-iframe div#submitdiv button.handlediv.button-link,
+  .in-iframe div#wpadminbar,
+  .in-iframe h1,
+  .in-iframe h2.hndle.ui-sortable-handle {
+    display: none
+  }
+
+  .in-iframe.auto-fold #wpcontent,
+  .in-iframe.auto-fold #wpfooter {
+    margin: 0 !important
+  }
+
+  .in-iframe,
+  .in-iframe #wpwrap {
+    background: 0 0 !important
+  }
+
+  html.wp-toolbar.in-iframe {
+    padding: 0 !important
+  }
+
+  .in-iframe #major-publishing-actions {
+    background: 0 0;
+    border: none
+  }
+
+  .in-iframe .postbox .inside {
+    border: none
+  }
+
+  .in-iframe div#submitdiv {
+    border: none;
+    margin: 0;
+    box-shadow: none
+  }
+
+  .in-iframe button.handlediv.button-link {
+    display: none !important
+  }
+
+  .in-iframe #wpbody-content {
+    padding-bottom: 0
+  }
+
+  .in-iframe .wrap.acf-settings-wrap {
+    margin: 0
+  }
+
+  .in-iframe div#wpcontent {
+    padding: 0
+  }
+
+  .in-iframe div#poststuff {
+    padding: 0 5px
+  }
+
+  .in-iframe #post-body.columns-2 #postbox-container-1 {
+    float: none;
+    width: 100%;
+    margin: 0
+  }
+
+  .in-iframe #poststuff #post-body.columns-2 #side-sortables {
+    width: 100%;
+    min-height: 0
+  }
+
+  .in-iframe #poststuff #post-body.columns-2 {
+    margin-right: 0;
+  }
+
 </style>
 
 
@@ -683,102 +760,14 @@ function fiwi_footer() {?>
 <script>
 
 
-
-
-
 </script>
 
 <?php }
 
 add_action('admin_footer', 'fiwi_footer');
 
-class Replace_WP_Dashboard {
-    protected $capability = 'read';
-    protected $title;
-    final public function __construct() {
-        if( is_admin() ) {
-            add_action( 'init', array( $this, 'init' ) );
-        }
-    }
-    final public function init() {
-        if( current_user_can( $this->capability ) ) {
-            $this->set_title();
-            add_filter( 'admin_title', array( $this, 'admin_title' ), 10, 2 );
-            add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-            add_action( 'current_screen', array( $this, 'current_screen' ) );
-        }
-    }
-    /**
-     * Sets the page title for your custom dashboard
-     */
-    function set_title() {
-        if( ! isset( $this->title ) ) {
-            $this->title = __( 'Dashboard' );
-        }
-    }
-    /**
-     * Output the content for your custom dashboard
-     */
-    function page_content() {
-        $content = __( 'Welcome to your new dashboard!' );
-        echo <<<HTML
-<div class="wrap">
-    <h2>{$this->title}</h2>
-    <p>{$content}</p>
-</div>
-HTML;
-    }
-    /**
-     * Fixes the page title in the browser.
-     *
-     * @param string $admin_title
-     * @param string $title
-     * @return string $admin_title
-     */
-    final public function admin_title( $admin_title, $title ) {
-        global $pagenow;
-        if( 'admin.php' == $pagenow && isset( $_GET['page'] ) && 'custom-page' == $_GET['page'] ) {
-            $admin_title = $this->title . $admin_title;
-        }
-        return $admin_title;
-    }
-    final public function admin_menu() {
-        /**
-         * Adds a custom page to WordPress
-         */
-        add_menu_page( $this->title, '', 'manage_options', 'custom-page', array( $this, 'page_content' ) );
-        /**
-         * Remove the custom page from the admin menu
-         */
-        remove_menu_page('custom-page');
-        /**
-         * Make dashboard menu item the active item
-         */
-        global $parent_file, $submenu_file;
-        $parent_file = 'index.php';
-        $submenu_file = 'index.php';
-        /**
-         * Rename the dashboard menu item
-         */
-        global $menu;
-        $menu[2][0] = $this->title;
-        /**
-         * Rename the dashboard submenu item
-         */
-        global $submenu;
-        $submenu['index.php'][0][0] = $this->title;
-    }
-    /**
-     * Redirect users from the normal dashboard to your custom dashboard
-     */
-    final public function current_screen( $screen ) {
-        if( 'dashboard' == $screen->id ) {
-            wp_safe_redirect( admin_url('admin.php?page=acf-options-display-options') );
-            exit;
-        }
-    }
-}
-new Replace_WP_Dashboard();
+
+
 if( function_exists('acf_add_local_field_group') ):
 
 acf_add_local_field_group(array (
@@ -1489,139 +1478,192 @@ endif;
 function fiwi_login_styles() {?>
 
 <style>
-         .login h1 a {
-                background: url(/wp-content/themes/smores-core/admin/img/fiwi-login.svg) no-repeat bottom center !important;
-                margin-bottom: 10px;
-                background-size: auto 100% !Important;
-                width: 100%;
-            }
-            .login h1:after {
-                content: '';
-                display: block;
-                width: 100%;
-                height: 30px;
-                background-image: url(/wp-content/themes/smores-core/admin/img/FIWI-classic-website.svg);
-                background-size: 100% auto;
-                background-position: 50% 100%;
-                background-repeat: no-repeat;
-            }
+  .login h1 a {
+    background: url(/wp-content/themes/smores-core/admin/img/fiwi-login.svg) no-repeat bottom center !important;
+    margin-bottom: 10px;
+    background-size: auto 100% !Important;
+    width: 100%;
+  }
 
-                .login:not(.fiwi-redirected-user) {
+  .login h1:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 30px;
+    background-image: url(/wp-content/themes/smores-core/admin/img/FIWI-classic-website.svg);
+    background-size: 100% auto;
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+  }
 
-            background: white;
-        }
-    .login:not(.fiwi-redirected-user) form#loginform {
-        background: none;
-        box-shadow: none;
-        margin-top: 0;
+  .login:not(.fiwi-redirected-user) {
 
-    }
+    background: white;
+  }
 
-    .login:not(.fiwi-redirected-user) input[type=text],
-    .login:not(.fiwi-redirected-user) input[type=email],
-    .login:not(.fiwi-redirected-user) input#user_pass {
-        padding: 10px;
-        background: none;
-        width: 100%;
-        border: 1px solid grey;
-        font-family: Baskerville;
-        font-style: italic;
-        font-size: 22px;
-        line-height: 1.5;
-        color: grey;
-        margin: 0;
-        text-align: center;
-    }
+  .login:not(.fiwi-redirected-user) form#loginform {
+    background: none;
+    box-shadow: none;
+    margin-top: 0;
 
-    .login:not(.fiwi-redirected-user) input[type=submit] {
+  }
+
+  .login:not(.fiwi-redirected-user) input[type=text],
+  .login:not(.fiwi-redirected-user) input[type=email],
+  .login:not(.fiwi-redirected-user) input#user_pass {
+    padding: 10px;
+    background: none;
+    width: 100%;
+    border: 1px solid grey;
+    font-family: Baskerville;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.5;
+    color: grey;
+    margin: 0;
+    text-align: center;
+  }
+
+  .login:not(.fiwi-redirected-user) input[type=submit] {
     background: #d6372b;
     color: white;
-        font-family: 'League Gothic', 'Arial Narrow', sans-serif;
-        font-size: 2em !important;
-        letter-spacing: .1em;
-        padding: 0.156em 1.875em !important;
-        text-align: center;
-        text-transform: uppercase;
-        transition: all .3s;
-        border: 1px solid #d6372b;
-        height: auto !important;
-        display: block !important;
-        width: 100%;
-        margin: 10px 0;
-        text-shadow: none;
-        border-radius: 0 !important;
-        box-shadow: none;
-        line-height: 1.5 !important;
-        font-weight: normal !important;
-    }
+    font-family: 'League Gothic', 'Arial Narrow', sans-serif;
+    font-size: 2em !important;
+    letter-spacing: .1em;
+    padding: 0.156em 1.875em !important;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all .3s;
+    border: 1px solid #d6372b;
+    height: auto !important;
+    display: block !important;
+    width: 100%;
+    margin: 10px 0;
+    text-shadow: none;
+    border-radius: 0 !important;
+    box-shadow: none;
+    line-height: 1.5 !important;
+    font-weight: normal !important;
+  }
 
-        .login:not(.fiwi-redirected-user) form .forgetmenot label {
-        color: grey;
-        text-align: center;
-        font-size: 1.5em;
-        font-family: Baskerville;
-        font-style: italic;
-    }
+  .login:not(.fiwi-redirected-user) form .forgetmenot label {
+    color: grey;
+    text-align: center;
+    font-size: 1.5em;
+    font-family: Baskerville;
+    font-style: italic;
+  }
 
-    .login:not(.fiwi-redirected-user) form .forgetmenot {
-        font-weight: normal;
-        float: left;
-        margin-bottom: 0;
-        padding: 10px 80px 0;
-    }
+  .login:not(.fiwi-redirected-user) form .forgetmenot {
+    font-weight: normal;
+    float: left;
+    margin-bottom: 0;
+    padding: 10px 80px 0;
+  }
 
-    .login:not(.fiwi-redirected-user) input#rememberme {
-        /* display: block; */
-        margin: 0 auto;
-        -webkit-appearance: none;
-        border-radius: 100px;
-        float: none;
-        margin: 11px auto 11px;
-        top: -3px;
-        position: relative;
-    }
+  .login:not(.fiwi-redirected-user) input#rememberme {
+    /* display: block; */
+    margin: 0 auto;
+    -webkit-appearance: none;
+    border-radius: 100px;
+    float: none;
+    margin: 11px auto 11px;
+    top: -3px;
+    position: relative;
+  }
 
-    .login:not(.fiwi-redirected-user) p.forgetmenot {
-        display: block;
-        width: 100%;
-    }
+  .login:not(.fiwi-redirected-user) p.forgetmenot {
+    display: block;
+    width: 100%;
+  }
 
-        .login:not(.fiwi-redirected-user) #backtoblog a,
-    .login:not(.fiwi-redirected-user) #nav a {
-        color: grey;
-        font-family: Baskerville;
-        font-style: italic;
-    }
+  .login:not(.fiwi-redirected-user) #backtoblog a,
+  .login:not(.fiwi-redirected-user) #nav a {
+    color: grey;
+    font-family: Baskerville;
+    font-style: italic;
+  }
 
-.login:not(.fiwi-redirected-user) input[type=submit]:hover {
+  .login:not(.fiwi-redirected-user) input[type=submit]:hover {
     background: white;
     color: #d6372b;
     box-shadow: none !important;
     border-color: white;
-}
+  }
 
 
-        .login #login_error, .login .message {
+  .login #login_error,
+  .login .message {
 
-            margin: 1rem 0 0;
-        }
+    margin: 1rem 0 0;
+  }
 
 
-        .login.wp-core-ui .button, .login.wp-core-ui .button.button-large {
+  .login.wp-core-ui .button,
+  .login.wp-core-ui .button.button-large {
 
-            font-size: 2em !important;
-        }
+    font-size: 2em !important;
+  }
 
-            .login label {
-        font-size: 0;
-    }
+  .login label {
+    font-size: 0;
+  }
+
 </style>
-    <script>
-        jQuery('document').ready(function(){
-            jQuery('body').addClass('fiwi-login');
-            jQuery('#user_login').attr( 'placeholder', 'Username' );
-            jQuery('#user_pass').attr( 'placeholder', 'Password' );
-        });
+<script>
+  jQuery('document').ready(function() {
+    jQuery('body').addClass('fiwi-login');
+    jQuery('#user_login').attr('placeholder', 'Username');
+    jQuery('#user_pass').attr('placeholder', 'Password');
+  });
+
 </script>
 <?php }
 add_action( 'login_head', 'fiwi_login_styles' );
+
+
+//function wds_gif_endpoint() {
+//
+//    add_rewrite_tag( '%wds_gif%', '([^&]+)' );
+//    add_rewrite_rule( 'gifs/([^&]+)/?', 'index.php?wds_gif=$matches[1]', 'top' );
+//
+//}
+//add_action( 'init', 'wds_gif_endpoint' );
+
+//function wds_gif_endpoint_data() {
+//
+//    global $wp_query;
+//
+//    $gif_data = array();
+//
+//    $args = array(
+//        'post_type'      => 'clients',
+//        'posts_per_page' => -1,
+//    );
+//    $gif_query = new WP_Query( $args );
+//    if ( $gif_query->have_posts() ) : while ( $gif_query->have_posts() ) : $gif_query->the_post();
+//
+//
+//    if( have_rows('slides') ):
+//    while ( have_rows('slides') ) : the_row();
+//
+//
+//    if(get_row_layout() == 'client_video' || get_row_layout() == 'video'):
+//
+//    $gif_data[] = wp_slash(get_sub_field('video'));
+//
+//    endif;
+//
+//    endwhile;
+//    endif;
+//
+//    endwhile;
+//    wp_reset_postdata();
+//    endif;
+//
+////    $gif_data = json_encode( $gif_data, JSON_UNESCAPED_SLASHES );
+////    wp_send_json( wp_unslash($gif_data));
+//    wp_send_json( $gif_data );
+//
+//}
+//add_action( 'template_redirect', 'wds_gif_endpoint_data' );

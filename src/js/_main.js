@@ -25,15 +25,18 @@
 
         var mode = Cookies.get('mode');
         var upcoming = Cookies.get('meeting_upcoming');
+
         function Get(yourUrl) {
           var Httpreq = new XMLHttpRequest(); // a new request
           Httpreq.open("GET", yourUrl, false);
           Httpreq.send(null);
           return Httpreq.responseText;
         }
+
         var index;
         var json_obj = JSON.parse(Get('https://slack.com/api/emoji.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6'));
         var emojis = json_obj.emoji;
+
         function loadEmoji() {
           Object.keys(emojis).forEach(function (k) {
             $('span.emoji').each(function () {
@@ -49,14 +52,18 @@
         }
 
 
-        var updateTimer = setInterval(updateACF, 1000);
+        var options
+        var meetingOut
+        var meetings
 
         function updateACF() {
 
-          var options = JSON.parse(Get('/wp-json/acf/v2/options/client_schedule'));
-            var meetingOut = Cookies.get('leaving_meeting');
-            var meetings = options.client_schedule;
+          options = JSON.parse(Get('/wp-json/acf/v2/options/client_schedule'));
+          meetingOut = Cookies.get('leaving_meeting');
+          meetings = options.client_schedule;
+        }
 
+        function runningClock(){
 
 
             if(meetings == false) {
@@ -176,6 +183,7 @@
                 }
 
             }
+
         }
         function watchSlack() {
           var meetingIn = Cookies.get('entering_meeting');
@@ -198,13 +206,12 @@
                       } else {
                         $('.members-status li[id="' + member + '"] .user-status').text(status_text);
                         console.log('Updating ' + member + ' Status: ' + status_text + '(' + current + ')');
+
+
                       }
                       $('.members-status li[id="' + member + '"]').attr('class', current);
                       $('.members-status li[id="' + member + '"] > span').attr('class', current);
-                      $('.members-status li[id="' + member + '"]').addClass('updated');
-                      setTimeout(function () {
-                        $('.members-status li[id="' + member + '"]').removeClass('updated');
-                      }, 5500);
+
                       console.log('Updating ' + member + ' Status: ' + current);
                       //                      var emojiText = emojiText.convert(emoji, {
                       //                                      delimiter: ':'
@@ -235,8 +242,15 @@
             }, 1 * 60 * 1000);
           }
         }
-        $(document).ready(function () {
-          console.time('Slack Update');
+
+        $(window).load(function () {
+
+          updateACF()
+
+          var updateTimer = setInterval(updateACF, 600000);
+          var updateTimer = setInterval(runningClock, 1000);
+
+//          console.time('Slack Update');
           loadEmoji();
           watchSlack();
 

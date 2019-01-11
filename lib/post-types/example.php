@@ -14,7 +14,8 @@
          'public' => true,
          'show_ui' => true,
          'taxonomies'          => array( 'category' ),
-
+          'show_in_rest'       => true,
+          'rest_base'          => 'clients',
      )
  );
 

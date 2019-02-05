@@ -15,342 +15,334 @@
 ?>
 <?php
 
-      $ip = $_SERVER['REMOTE_ADDR'];
+$ip = $_SERVER['REMOTE_ADDR'];
 
-      if($ip == '67.9.125.106'):
-
-
-
-      get_template_part('templates/head');
+//      if($ip == '67.9.125.106'):
 
 
-      $meetingOut = $_COOKIE['leaving_meeting'];
-      $meetingIn = $_COOKIE['entering_meeting'];
-      $meetings = $_COOKIE['no_meetings'];
-      $mode = $_COOKIE['mode'];
+
+get_template_part('templates/head');
+
+
+$meetingOut = $_COOKIE['leaving_meeting'];
+$meetingIn = $_COOKIE['entering_meeting'];
+$meetings = $_COOKIE['no_meetings'];
+$mode = $_COOKIE['mode'];
 
 
 
 ?>
 
-                <script>
+<script>
+  (function($) {
 
-                  (function ($) {
+    'use strict';
 
-                      'use strict';
+    $(window).load(function() {
 
-                    $(window).load(function(){
+      var refreshTimer = setInterval(watchRefresh, 60000);
 
-                        var refreshTimer = setInterval(watchRefresh, 60000);
+      function Get(yourUrl) {
+        var Httpreq = new XMLHttpRequest(); // a new request
+        Httpreq.open("GET", yourUrl, false);
+        Httpreq.send(null);
+        return Httpreq.responseText;
+      }
 
-                        function Get(yourUrl) {
-                          var Httpreq = new XMLHttpRequest(); // a new request
-                          Httpreq.open("GET", yourUrl, false);
-                          Httpreq.send(null);
-                          return Httpreq.responseText;
-                        }
+      function watchRefresh() {
 
-                        function watchRefresh() {
+        var options = JSON.parse(Get('/wp-json/acf/v2/options/refresh'));
+        var refresh = options.refresh;
 
-                        var options = JSON.parse(Get('/wp-json/acf/v2/options/refresh'));
-                        var refresh = options.refresh;
+        if (refresh == 'Yes') {
 
-                        if(refresh == 'Yes'){
+          console.log('Refreshingggg');
 
-                          console.log('Refreshingggg');
+          location.reload();
 
-                          location.reload();
+          <?php if(get_field('refresh', 'options')): update_field( 'refresh', null, 'options' ); endif;?>
 
-                          <?php if(get_field('refresh', 'options')): update_field( 'refresh', null, 'options' ); endif;?>
+        }
 
-                        }
+      }
 
-                        }
+    });
 
-                    });
-
-
-
-                  })(jQuery);
+  })(jQuery);
+</script>
 
 
+<?php // Directy turn on Welcome Mode
+if($mode == 'welcome'){
+
+if($meetings == 'yes'):
+
+echo '<script>
+console.log("No meetings switching to slide mode");
+Cookies.set("entering_meeting", "no");
+Cookies.set("meeting_upcoming", "no");
+Cookies.set("mode", "slides");
+
+setTimeout(function(){
+location.reload();
+}, 1000);
+
+</script>';
+
+endif;  ?>
 
 
-
-                </script>
-
-
-        <?php // Directy turn on Welcome Mode
-                if($mode == 'welcome'){
-
-
-
-                if($meetings == 'yes'):
-
-                  echo '<script>
-                  console.log("No meetings switching to slide mode");
-                  Cookies.set("entering_meeting", "no");
-                  Cookies.set("meeting_upcoming", "no");
-                  Cookies.set("mode", "slides");
-
-                  setTimeout(function(){
-                  location.reload();
-                  }, 1000);
-
-                  </script>';
-
-                endif;  ?>
-
-
-
-
-            <div id="wrapper" class="welcome">
-                <?php  // Check if Schedule Meetings are present
+<div id="wrapper" class="welcome">
+  <?php  // Check if Schedule Meetings are present
                     if( have_rows('client_schedule', 'options') ) { ?>
-                    <?php $counter == 0; while ( have_rows('client_schedule', 'options') ) : the_row();?>
-                        <?php $counter++; // Compare Scheduled Meeting Times against current time
-                              if($counter == 1):
+  <?php $counter == 0; while ( have_rows('client_schedule', 'options') ) : the_row();?>
+  <?php $counter++; // Compare Scheduled Meeting Times against current time
+  if($counter == 1):
 
-                              $time = strtotime(get_sub_field('client_time', 'options')) - 900;
-                              $currentTime = date('H:i');
-                              $meetingtime = strtotime(get_sub_field('client_time'));
-                              $meetingtimeAfter = strtotime(get_sub_field('client_time', 'options')) + 900;
-                              $meetingtimeDisplay = date('H:i a', $meetingtime);
-                              $meetingtimeComp = date('H:i', $time);
-                              $meetingtimeCompAfter = date('H:i', $meetingtimeAfter);
+  $time = strtotime(get_sub_field('client_time', 'options')) - 900;
+  $currentTime = date('H:i');
+  $meetingtime = strtotime(get_sub_field('client_time'));
+  $meetingtimeAfter = strtotime(get_sub_field('client_time', 'options')) + 900;
+  $meetingtimeDisplay = date('H:i a', $meetingtime);
+  $meetingtimeComp = date('H:i', $time);
+  $meetingtimeCompAfter = date('H:i', $meetingtimeAfter);
 
-                                echo '<script>
-                                console.log("Meeting time: ' . $meetingtimeComp . ', Current time: ' . $currentTime . '");
-                                </script>
-                                ';
+  echo '<script>
+  console.log("Meeting time: ' . $meetingtimeDisplay . ', Current time: ' . $currentTime . '");
+  </script>
+  ';
 
 
-                                  if(($meetingtimeComp < $currentTime) && ($currentTime < $meetingtimeCompAfter)):
-    //                              delete_row('client_schedule', 1, 'options');
+  if(($meetingtimeComp < $currentTime) && ($currentTime < $meetingtimeCompAfter)):
+  //                              delete_row('client_schedule', 1, 'options');
 
-                                  echo '<script>
-                                  console.log("Welcome Mode: Meeting Window");
-//                                  Cookies.remove();
-                                  Cookies.set("entering_meeting", "yes");
-                                  Cookies.set("mode", "welcome");
-//                                  location.reload();
-                                  </script>';
+  echo '<script>
+//  alert("Welcome Mode: Meeting Window");
+  Cookies.set("entering_meeting", "yes");
+  Cookies.set("mode", "welcome");
 
-                                  elseif(($meetingtimeComp > $currentTime) && ($currentTime < $meetingtimeCompAfter)):
-//                                  delete_row('client_schedule', 1, 'options');
+  </script>';
 
-                                  echo '<script>
-                                  console.log("Slide Mode: Time is less than 15 min before AND 15 min after meeting");
-//                                  Cookies.remove();
-                                  Cookies.set("mode", "slides");
-                                  Cookies.set("meeting_upcoming", "no");
-                                  Cookies.remove("entering_meeting");
-                                  location.reload();
-                                  </script>';
+  elseif(($meetingtimeComp > $currentTime) && ($currentTime < $meetingtimeCompAfter)):
+  //                                  delete_row('client_schedule', 1, 'options');
 
-                                  elseif(($meetingtimeComp < $currentTime) && ($currentTime > $meetingtimeCompAfter)):
-                                  delete_row('client_schedule', 1, 'options');
+  echo '<script>
+//  alert("Slide Mode: Time is less than 15 min before AND 15 min after meeting");
 
-                                  echo '<script>
-                                  console.log("Slide Mode: Time is greater than 15 min before AND time is greater than 15 min after meeting");
-//                                  Cookies.remove();
-                                  Cookies.remove("entering_meeting");
-                                  Cookies.set("mode", "slides");
-                                  location.reload();
-                                  </script>';
+  Cookies.set("mode", "slides");
+  Cookies.set("meeting_upcoming", "no");
+  Cookies.remove("entering_meeting");
+  location.reload();
+  </script>';
 
-                                  elseif(($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter)):
-                                  delete_row('client_schedule', 1, 'options');
+  elseif((($meetingtimeComp < $currentTime) && ($currentTime > $meetingtimeCompAfter)) || ($currentTime == $meetingtimeCompAfter)):
+  delete_row('client_schedule', 1, 'options');
 
-                                  echo '<script>
-                                  console.log("Slide Mode: Time is less than 15 min before AND time is greater than 15 min after meeting");
-//                                  Cookies.remove();
-                                  Cookies.remove("entering_meeting");
-                                  Cookies.set("mode", "slides");
-                                  location.reload();
-                                  </script>';
-                                   endif;
+  echo '<script>
+//  alert("Slide Mode: Time is greater than 15 min before AND time is greater than 15 min after meeting");
+
+  Cookies.remove("entering_meeting");
+  Cookies.set("mode", "slides");
+  location.reload();
+  </script>';
+
+  elseif(($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter)):
+  delete_row('client_schedule', 1, 'options');
+
+  echo '<script>
+//  alert("Slide Mode: Time is less than 15 min before AND time is greater than 15 min after meeting");
+
+  Cookies.remove("entering_meeting");
+  Cookies.set("mode", "slides");
+  location.reload();
+  </script>';
+   endif;
 
                                 if($mode == 'welcome') {?>
-                            <?php $welcomeType = get_sub_field('video_or_image');?>
-                            <?php if($welcomeType == 'video' && get_sub_field('client_video')) {?>
-                            <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
-                                <source src="<?php the_sub_field('client_video');?>">
-                            </video>
-                            <?php } elseif ($welcomeType == 'image') {?>
-                            <img class="bg" src="<?php $attachment_id = get_sub_field('client_image'); $size = "full"; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
-                            <?php } else { ?>
-                            <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
-                                <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
-                            </video>
-                            <?php } ?>
-                            <?php $color = get_sub_field('bg_color'); $opacity = get_sub_field('background_opacity');?>
-                            <div id="overlay" <?php if(get_sub_field('bg_color') || get_sub_field('background_opacity')): echo 'style="background-color: ' . $color . '; opacity: ' . $opacity . '"'; endif;?>></div>
-                            <div id="content" class="table-me">
-                                <div class="align-me align-top">
-                                <h1 class="large blinking"><?php if(get_sub_field('welcome_message')): echo get_sub_field('welcome_message'); else: echo 'Now Boarding'; endif;?> </h1>
-                                <div class="medium">
-                                  <p><em><?php the_sub_field('individual_names');?></em></p>
-                                  <p><strong><?php the_sub_field('client_name');?></strong></p>
-                            </div>
-                            </div>
+  <?php $welcomeType = get_sub_field('video_or_image');?>
+  <?php if($welcomeType == 'video' && get_sub_field('client_video')) {?>
+  <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
+    <source src="<?php the_sub_field('client_video');?>">
+  </video>
+  <?php } elseif ($welcomeType == 'image') {?>
+  <img class="bg" src="<?php $attachment_id = get_sub_field('client_image'); $size = " full"; $image=wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
+  <?php } else { ?>
+  <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
+    <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
+  </video>
+  <?php } ?>
+  <?php $color = get_sub_field('bg_color'); $opacity = get_sub_field('background_opacity');?>
+  <div id="overlay" <?php if(get_sub_field('bg_color') || get_sub_field('background_opacity')): echo 'style="background-color: ' . $color . '; opacity: ' . $opacity . '"' ; endif;?>></div>
+  <div id="content" class="table-me">
+    <div class="align-me align-top">
+      <h1 class="large blinking">
+        <?php if(get_sub_field('welcome_message')): echo get_sub_field('welcome_message'); else: echo 'Now Boarding'; endif;?>
+      </h1>
+      <div class="medium">
+        <p><em>
+            <?php the_sub_field('individual_names');?></em></p>
+        <p><strong>
+            <?php the_sub_field('client_name');?></strong></p>
+      </div>
+    </div>
 
-                            <?php } else { ?>
-                                    <?php //update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options');
-
-
-                              if($meetingOut == 'yes' && (($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter))):
-                              delete_row('client_schedule', 1, 'options');
-                              update_field( 'override_slide_mode', 'No', 'options' );
-                              echo '<script>
-                              console.log("Meeting window passed");
-//                              Cookies.remove();
-                              Cookies.set("meeting_upcoming", "no");
-                              Cookies.remove("entering_meeting");
-                              Cookies.set("mode", "slides");
-                              location.reload();
-                              </script>';
-                              endif;
-
-                              ?>
-                                    <script>
-//                                        location.reload();
-                                    </script>
-                                    <?php }?>
-                                        <?php endif; endwhile ; wp_reset_postdata();
-                                               $mode = get_field('override_slide_mode', 'options');
-                                                if(($lesstime < $currentTime) && ($meetingOut == 'yes') && ($time < $currentTime)):
-                                                delete_row('client_schedule', 1, 'options'); update_field( 'override_slide_mode', 'No', 'options' );
-                                                echo '<script>
-                                                console.log("No Meetings but reloading to clear ACF Schedule");
-//                                                Cookies.remove();
-                                                Cookies.set("meeting_upcoming", "no");
-                                                Cookies.remove("entering_meeting");
-                                                Cookies.set("mode", "slides");
-                                                location.reload();
-                                                </script>';
-                                                endif; ?>
-                                            <?php // if no other upcoming meetings switch back to Slide Mode
-                                                            } ?>
-            </div>
-            <?php } else {?>
-                    <div class="fade">
-                <?php
+    <?php } else { ?>
+    <?php //update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options');
 
 
-                          if( have_rows('client_schedule', 'options') ): ?>
-                    <div class="slide schedule schedule client board" data-attr="6000">
-                    <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
-                        <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
-                    </video>
-                    <div class="container-fluid">
-                        <div class="row schedule-header">
-                            <div class="col-md-12">
-                            <h2>Arrivals</h2>
-                            </div>
-                        </div>
-                    <?php while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
-                    <?php
+      if($meetingOut == 'yes' && (($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter))):
+      delete_row('client_schedule', 1, 'options');
+      update_field( 'override_slide_mode', 'No', 'options' );
+      echo '<script>
+      console.log("Meeting window passed");
+
+      Cookies.set("meeting_upcoming", "no");
+      Cookies.remove("entering_meeting");
+      Cookies.set("mode", "slides");
+      location.reload();
+      </script>';
+      endif;
+
+      ?>
 
 
-                              $time = strtotime(get_sub_field('client_time', 'options')) - 900;
-                              $currentTime = date('H:i');
-                              $meetingtime = strtotime(get_sub_field('client_time'));
-                              $meetingtimeAfter = strtotime(get_sub_field('client_time', 'options')) + 900;
-                              $meetingtimeDisplay = date('H:i a', $meetingtime);
-                              $meetingtimeComp = date('H:i', $time);
-                              $meetingtimeCompAfter = date('H:i', $meetingtimeAfter);
+    <?php }?>
+    <?php endif; endwhile ; wp_reset_postdata();
+       $mode = get_field('override_slide_mode', 'options');
+        if(($lesstime < $currentTime) && ($meetingOut == 'yes') && ($time < $currentTime)):
+        delete_row('client_schedule', 1, 'options'); update_field( 'override_slide_mode', 'No', 'options' );
+        echo '<script>
+        console.log("No Meetings but reloading to clear ACF Schedule");
 
-                                echo '<script>
-                                console.log("Meeting time: ' . $meetingtimeComp . ', Current time: ' . $currentTime . '");
-                                </script>
-                                ';
+        Cookies.set("meeting_upcoming", "no");
+        Cookies.remove("entering_meeting");
+        Cookies.set("mode", "slides");
+        location.reload();
+        </script>';
+        endif; ?>
+    <?php // if no other upcoming meetings switch back to Slide Mode
+    } ?>
+  </div>
+  <?php } else {?>
+  <div class="fade">
+    <?php
 
 
-                                  if(($meetingtimeComp < $currentTime) && ($currentTime < $meetingtimeCompAfter)):
-    //                              delete_row('client_schedule', 1, 'options');
+    if( have_rows('client_schedule', 'options') ): ?>
+    <div class="slide schedule schedule client board" data-attr="6000">
+      <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
+        <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
+      </video>
+      <div class="container-fluid">
+        <div class="row schedule-header">
+          <div class="col-md-12">
+            <h2>Arrivals</h2>
+          </div>
+        </div>
+        <?php while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
+        <?php
 
-                                  echo '<script>
-                                  console.log("Welcome Mode: Meeting Window");
-//                                  Cookies.remove();
-                                  Cookies.set("entering_meeting", "yes");
-                                  Cookies.set("mode", "welcome");
-                                  location.reload();
-                                  </script>';
 
-                                  elseif(($meetingtimeComp > $currentTime) && ($currentTime < $meetingtimeCompAfter)):
-//                                  delete_row('client_schedule', 1, 'options');
+          $time = strtotime(get_sub_field('client_time', 'options')) - 900;
+          $currentTime = date('H:i');
+          $meetingtime = strtotime(get_sub_field('client_time'));
+          $meetingtimeAfter = strtotime(get_sub_field('client_time', 'options')) + 900;
+          $meetingtimeDisplay = date('H:i a', $meetingtime);
+          $meetingtimeComp = date('H:i', $time);
+          $meetingtimeCompAfter = date('H:i', $meetingtimeAfter);
 
-                                  echo '<script>
-                                  console.log("Slide Mode: Time is less than 15 min before AND 15 min after meeting");
-//                                  Cookies.remove();
-                                  Cookies.set("mode", "slides");
-                                  Cookies.set("meeting_upcoming", "yes");
-                                  Cookies.remove("entering_meeting");
-//                                  location.reload();
-                                  </script>';
+          echo '<script>
+          console.log("Meeting time: ' . $meetingtimeDisplay . ', Current time: ' . $currentTime . '");
+          </script>
+          ';
 
-                                  elseif(($meetingtimeComp < $currentTime) && ($currentTime > $meetingtimeCompAfter)):
-                                  delete_row('client_schedule', 1, 'options');
 
-                                  echo '<script>
-                                  console.log("Slide Mode: Time is greater than 15 min before AND time is greater than 15 min after meeting");
-//                                  Cookies.remove();
-                                  Cookies.remove("entering_meeting");
-                                  Cookies.set("meeting_upcoming", "no");
-                                  Cookies.set("mode", "slides");
-                                  location.reload();
-                                  </script>';
+          if(($meetingtimeComp < $currentTime) && ($currentTime < $meetingtimeCompAfter)):
+          //                              delete_row('client_schedule', 1, 'options');
 
-                                  elseif(($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter)):
-//                                  delete_row('client_schedule', 1, 'options');
+          echo '<script>
+//          alert("Welcome Mode: Meeting Window");
+          //                                  Cookies.remove();
+          Cookies.set("entering_meeting", "yes");
+          Cookies.set("mode", "welcome");
+          location.reload();
+          </script>';
 
-                                  echo '<script>
-                                  console.log("Slide Mode: Time is less than 15 min before AND time is greater than 15 min after meeting");
-//                                  Cookies.remove();
-                                  Cookies.set("meeting_upcoming", "yes");
-                                  Cookies.set("mode", "slides");
-//                                  location.reload();
-                                  </script>';
-                                   endif;
-                                ?>
+          elseif(($meetingtimeComp > $currentTime) && ($currentTime < $meetingtimeCompAfter)):
+          //                                  delete_row('client_schedule', 1, 'options');
 
-                                      <div class="row">
-                                          <div class="col-md-9 client-name">
-                                          <input class="hero dark XXL title" data-src="<?php remove_filter ('acf_the_content', 'wpautop'); echo get_sub_field('client_name', false, false);?>">
-                                          </div>
-                                          <div class="col-md-3 client-time">
-                                            <input class="hero dark XXL time" data-src="<?php echo $meetingtimeDisplay; ?>">
-                                          </div>
-                                      </div>
-                    <?php endwhile; ?>
-                        </div>
-                      </div>
-                        <?php endif; ?>
-                    <?php $slides = get_field('slide_order', 'options'); ?>
-                    <?php $noslides = 0; foreach( $slides as $slide ): $noslides++;?>
-                    <?php if($noslides % 3 == 0) {
+          echo '<script>
+//          alert("Slide Mode: Time is more than 15 min before AND less than 15 min after meeting");
+          //                                  Cookies.remove();
+          Cookies.set("mode", "slides");
+          Cookies.set("meeting_upcoming", "yes");
+          Cookies.remove("entering_meeting");
+          //                                  location.reload();
+          </script>';
 
-                    $calendarId = 'findsomewinmore.com_393732373830313435@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
-                    $optParams = array(
-                    'maxResults' => 99,
-                    'singleEvents' => TRUE,
-                    'orderBy' => 'startTime',
-                    'timeMax' => date("c", strtotime(date("c") . ' +12 hours')),
-                    'timeMin' => date("c", mktime(0,0,0))
-                    );
-                    $events = $service->events->listEvents($calendarId, $optParams);
-                    if(!empty($events->getItems())): ?>
-                    <div class="slide schedule schedule client board" data-attr="20000" style="background: none;">
+          elseif(($meetingtimeComp < $currentTime) && ($currentTime > $meetingtimeCompAfter)):
+          delete_row('client_schedule', 1, 'options');
 
-                      <div class="container-fluid">
-                          <div class="row schedule-header">
-                              <div class="col-md-12">
-                              <h2>Arrivals: Altitude</h2>
-                              </div>
-                          </div>
+          echo '<script>
+//          alert("Slide Mode: Time is greater than 15 min before AND time is greater than 15 min after meeting");
+          //                                  Cookies.remove();
+          Cookies.remove("entering_meeting");
+          Cookies.set("meeting_upcoming", "no");
+          Cookies.set("mode", "slides");
+          setTimeout(function(){
+          location.reload();
+          }, 1000);
+          </script>';
 
-                                  <?php
+          elseif(($meetingtimeComp > $currentTime) && ($currentTime > $meetingtimeCompAfter)):
+          delete_row('client_schedule', 1, 'options');
+
+          echo '<script>
+//          alert("Slide Mode: Time is less than 15 min before AND time is greater than 15 min after meeting");
+          //                                  Cookies.remove();
+          Cookies.set("meeting_upcoming", "yes");
+          Cookies.set("mode", "slides");
+          location.reload();
+          </script>';
+          endif;
+          ?>
+
+        <div class="row">
+          <div class="col-md-9 client-name">
+            <input class="hero dark XXL title" data-src="<?php remove_filter ('acf_the_content', 'wpautop'); echo get_sub_field('client_name', false, false);?>">
+          </div>
+          <div class="col-md-3 client-time">
+            <input class="hero dark XXL time" data-src="<?php echo $meetingtimeDisplay; ?>">
+          </div>
+        </div>
+        <?php endwhile; ?>
+      </div>
+    </div>
+    <?php endif; ?>
+    <?php $slides = get_field('slide_order', 'options'); ?>
+    <?php $noslides = 0; foreach( $slides as $slide ): $noslides++;?>
+    <?php if($noslides % 3 == 0) {
+
+    $calendarId = 'findsomewinmore.com_393732373830313435@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
+    $optParams = array(
+    'maxResults' => 99,
+    'singleEvents' => TRUE,
+    'orderBy' => 'startTime',
+    'timeMax' => date("c", strtotime(date("c") . ' +12 hours')),
+    'timeMin' => date("c", mktime(0,0,0))
+    );
+    $events = $service->events->listEvents($calendarId, $optParams);
+    if(!empty($events->getItems())): ?>
+    <div class="slide schedule schedule client board" data-attr="20000" style="background: none;">
+
+      <div class="container-fluid">
+        <div class="row schedule-header">
+          <div class="col-md-12">
+            <h2>Arrivals: Altitude</h2>
+          </div>
+        </div>
+
+        <?php
                                       $currentTime = strtotime(current_time( 'H:i:s'));
                                       $i = 0; foreach ($events->getItems() as $event):
                                       $meetingtime = $event->getStart()->getDateTime();
@@ -364,40 +356,40 @@
 //                                      echo 'Meeting Time:' . $meetingtimeComp;
 //                                      echo '<br>Current Time:' . $currentTime;
                                       ?>
-                                      <div class="row">
-                                          <div class="col-md-10 client-name">
-                                          <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
-                                          </div>
-                                          <div class="col-md-2 client-time">
-                                            <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
-                                          </div>
-                                      </div>
-                                      <?php endif; endforeach;?>
-                          </div>
-                        </div>
-                    <?php endif; } elseif($noslides % 5 == 0){
+        <div class="row">
+          <div class="col-md-10 client-name">
+            <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
+          </div>
+          <div class="col-md-2 client-time">
+            <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
+          </div>
+        </div>
+        <?php endif; endforeach;?>
+      </div>
+    </div>
+    <?php endif; } elseif($noslides % 5 == 0){
 
-                      $calendarId = 'findsomewinmore.com_343531313332303332@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
-                      $optParams = array(
-                      'maxResults' => 99,
-                      'singleEvents' => TRUE,
-                      'orderBy' => 'startTime',
-                      'timeMax' => date("c", strtotime(date("c") . ' +12 hours')),
-                      'timeMin' => date("c", mktime(0,0,0))
-                      );
-                      $events = $service->events->listEvents($calendarId, $optParams);
+    $calendarId = 'findsomewinmore.com_343531313332303332@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
+    $optParams = array(
+    'maxResults' => 99,
+    'singleEvents' => TRUE,
+    'orderBy' => 'startTime',
+    'timeMax' => date("c", strtotime(date("c") . ' +12 hours')),
+    'timeMin' => date("c", mktime(0,0,0))
+    );
+    $events = $service->events->listEvents($calendarId, $optParams);
 
 
-                    if(!empty($events->getItems())): ?>
-                    <div class="slide schedule schedule client board" data-attr="20000" style="background: none;">
+    if(!empty($events->getItems())): ?>
+    <div class="slide schedule schedule client board" data-attr="20000" style="background: none;">
 
-                      <div class="container-fluid">
-                          <div class="row schedule-header">
-                              <div class="col-md-12">
-                              <h2>Arrivals: Runway</h2>
-                              </div>
-                          </div>
-                                  <?php
+      <div class="container-fluid">
+        <div class="row schedule-header">
+          <div class="col-md-12">
+            <h2>Arrivals: Runway</h2>
+          </div>
+        </div>
+        <?php
                                       $currentTime = strtotime(current_time( 'H:i:s'));
                                       $i = 0; foreach ($events->getItems() as $event):
                                       $meetingtime = $event->getStart()->getDateTime();
@@ -410,32 +402,32 @@
 //                                      echo 'Meeting Time:' . $meetingtimeComp;
 //                                      echo '<br>Current Time:' . $currentTime;
                                       ?>
-                                      <div class="row">
-                                          <div class="col-md-10 client-name">
-                                          <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
-                                          </div>
-                                          <div class="col-md-2 client-time">
-                                            <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
-                                          </div>
-                                      </div>
-                                      <?php endif; endforeach;?>
-                          </div>
-                        </div>
-                    <?php endif;
-                            }
-                      elseif($noslides % 4 == 0){
-                      $json = file_get_contents('https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true&pretty=true');
-                      $obj = json_decode($json);
-                      ?>
-                    <div class="slide schedule schedule client board" data-attr="20000" id="flight-status" style="background: none;">
+        <div class="row">
+          <div class="col-md-10 client-name">
+            <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
+          </div>
+          <div class="col-md-2 client-time">
+            <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
+          </div>
+        </div>
+        <?php endif; endforeach;?>
+      </div>
+    </div>
+    <?php endif;
+      }
+      elseif($noslides % 4 == 0){
+      $json = file_get_contents('https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true&pretty=true');
+      $obj = json_decode($json);
+      ?>
+    <div class="slide schedule schedule client board" data-attr="20000" id="flight-status" style="background: none;">
 
-                      <div class="">
-                        <div class="status">
+      <div class="">
+        <div class="status">
 
-                              <h2>Flight Status</h2>
+          <h2>Flight Status</h2>
 
-                          <ul class="members-status">
-                                  <?php foreach($obj->members as $member):
+          <ul class="members-status">
+            <?php foreach($obj->members as $member):
                                         if(($member->deleted == false) && ($member->is_bot == false) && ($member->real_name != 'slackbot')):
 
                                         $status = $member->profile->status_text;
@@ -443,9 +435,10 @@
                                         $display_name = $member->profile->display_name;
                                         $name = $member->name;
                                         ?>
-                                            <li id="<?php echo $member->name;?>" class="<?php echo $presence;?>"><img src="<?php echo $member->profile->image_72;?>"><?php if($display_name == ''): echo $name; else: echo $display_name; endif;?>
+            <li id="<?php echo $member->name;?>" class="<?php echo $presence;?>"><img src="<?php echo $member->profile->image_72;?>">
+              <?php if($display_name == ''): echo $name; else: echo $display_name; endif;?>
 
-                                                <?php
+              <?php
 
                                                 echo '<span class="' . $presence . '">';
                                                 if($status == ''):
@@ -459,26 +452,26 @@
 
                                                 ?>
 
-                                            </li>
+            </li>
 
-                                      <?php endif; endforeach;?>
-                                  </ul>
-                                </div>
-                          </div>
+            <?php endif; endforeach;?>
+          </ul>
+        </div>
+      </div>
 
-                        </div>
-                    <?php } elseif($noslides % 6 == 0){?>
-                    <?php if( have_rows('client_schedule', 'options') ): ?>
-                        <div class="slide schedule client video" data-attr="6000">
+    </div>
+    <?php } elseif($noslides % 6 == 0){?>
+    <?php if( have_rows('client_schedule', 'options') ): ?>
+    <div class="slide schedule client video" data-attr="6000">
 
-                        <div class="container-fluid">
-                            <div class="row schedule-header">
-                                <div class="col-md-12">
-                                <h2>Today's Meetings</h2>
-                                </div>
-                            </div>
-                        <?php while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
-                    <?php
+      <div class="container-fluid">
+        <div class="row schedule-header">
+          <div class="col-md-12">
+            <h2>Today's Meetings</h2>
+          </div>
+        </div>
+        <?php while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
+        <?php
 
 
 //                          $time = strtotime(get_sub_field('client_time', 'options'));
@@ -524,59 +517,65 @@
 
 
                               endif;?>
-                        <div class="row">
-                            <div class="col-md-10 client-name">
-                              <input class="hero dark XXL title" data-src="<?php the_sub_field('client_name');?>">
+        <div class="row">
+          <div class="col-md-10 client-name">
+            <input class="hero dark XXL title" data-src="<?php the_sub_field('client_name');?>">
 
-                            </div>
-                            <div class="col-md-2 client-time">
-                              <input class="hero dark XXL time" data-src="<?php $meetingtime = strtotime(get_sub_field('client_time')); echo date('g:i a', $meetingtime); ?>">
-                            </div>
-                        </div>
-                        <?php endwhile; ?>
-                            </div>
+          </div>
+          <div class="col-md-2 client-time">
+            <input class="hero dark XXL time" data-src="<?php $meetingtime = strtotime(get_sub_field('client_time')); echo date('g:i a', $meetingtime); ?>">
+          </div>
+        </div>
+        <?php endwhile; ?>
+      </div>
 
-                            </div>
-                    <?php endif; ?>
-                    <?php } else {?>
+    </div>
+    <?php endif; ?>
+    <?php } else {?>
 
-                    <?php if(get_field('client_logo', $slide->ID)):?>
-                        <div class="slide logo" data-attr="10000">
-                            <img src="<?php $attachment_id = get_field('client_logo', $slide->ID); $size = " large "; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
-                        </div>
-                    <?php endif;?>
+    <?php if(get_field('client_logo', $slide->ID)):?>
+    <div class="slide logo" data-attr="10000">
+      <img src="<?php $attachment_id = get_field('client_logo', $slide->ID); $size = " large "; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
+    </div>
+    <?php endif;?>
 
-                    <?php 	// flexible layouts of Client Slides
+    <?php 	// flexible layouts of Client Slides
                     if( have_rows('slides', $slide->ID) ):
                     // loop through the rows of data
                     while ( have_rows('slides', $slide->ID) ) : the_row();
                     if( get_row_layout() == 'image' || get_row_layout() == 'website_screenshot' ){?>
-                        <div class="slide image" data-attr="30000">
-                            <img src="<?php $attachment_id = get_sub_field('image'); $size = " large "; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
-                        </div>
-                    <?php } elseif ( get_row_layout() == 'client_video' || get_row_layout() == 'video' ){?>
-                        <div <?php /** If get Video Slide length **/ $videoLength = get_sub_field('video_length'); if($videoLength == '30000' || $videoLength == '60000'){?> data-attr='<?php echo $videoLength;?>' <?php }?> class="slide video client <?php if(get_sub_field('contain_video')): echo 'contain'; endif;?><?php if($videoLength == 'Full Video') { ?> video-full<?php }?>" <?php if(get_sub_field('video_bg_color')): echo 'style="background-color:' . get_sub_field('video_bg_color') . '"'; endif;?>>
-                        <video id="video-<?php $var = sanitize_title_for_query( get_the_title($slide->ID) ); echo esc_attr( $var);?>" autoplay  muted preload="none" src="<?php the_sub_field('video');?>">
+    <div class="slide image" data-attr="30000">
+      <img src="<?php $attachment_id = get_sub_field('image'); $size = " large "; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
+    </div>
+    <?php } elseif ( get_row_layout() == 'client_video' || get_row_layout() == 'video' ){?>
+    <div <?php /** If get Video Slide length **/ $videoLength=get_sub_field('video_length'); if($videoLength=='30000' || $videoLength=='60000' ){?> data-attr='
+      <?php echo $videoLength;?>'
+      <?php }?> class="slide video client
+      <?php if(get_sub_field('contain_video')): echo 'contain'; endif;?>
+      <?php if($videoLength == 'Full Video') { ?> video-full
+      <?php }?>"
+      <?php if(get_sub_field('video_bg_color')): echo 'style="background-color:' . get_sub_field('video_bg_color') . '"'; endif;?>>
+      <video id="video-<?php $var = sanitize_title_for_query( get_the_title($slide->ID) ); echo esc_attr( $var);?>" autoplay muted preload="none" src="<?php the_sub_field('video');?>">
 
 
-                        </div>
-                    <?php } // Endif Layout == Client Video
+    </div>
+    <?php } // Endif Layout == Client Video
                             // End of Client Slide repeater
                           endwhile; endif; }
                             // End foreach of selected clients for Slide Mode rotation
                           endforeach; ?>
-                  </div>
+  </div>
 
-                  <video  autoplay="" loop="" muted="" id="bgvid">
-                      <source src="https://s3.amazonaws.com/fw-devtools/fiwi-internal/assets/video/building.mp4" type="video/mp4">
-                  </video>
+  <video autoplay="" loop="" muted="" id="bgvid">
+    <source src="https://s3.amazonaws.com/fw-devtools/fiwi-internal/assets/video/building.mp4" type="video/mp4">
+  </video>
 
 
-                <?php // Endif not in Welcome Mode - in Slide Mode
+  <?php // Endif not in Welcome Mode - in Slide Mode
                 }?>
-                    <?php get_template_part('templates/footer');
-                      else:
-                      header("Location: https://welcome.findsomewinmore.com/wp-admin");
-                      endif;
+  <?php get_template_part('templates/footer');
+//                      else:
+//                      header("Location: https://welcome.findsomewinmore.com/wp-admin");
+//                      endif;
 
                       ?>

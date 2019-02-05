@@ -22,6 +22,8 @@
 
 
 
+        var updateTimer = setInterval(updateACF, 60000);
+        var runningClockTimer = setInterval(runningClock, 1000);
 
         var mode = Cookies.get('mode');
         var upcoming = Cookies.get('meeting_upcoming');
@@ -61,6 +63,7 @@
           options = JSON.parse(Get('/wp-json/acf/v2/options/client_schedule'));
           meetingOut = Cookies.get('leaving_meeting');
           meetings = options.client_schedule;
+          console.log('Watching Schedule...')
         }
 
         function runningClock(){
@@ -73,6 +76,9 @@
 
             }
             if (meetings != false) {
+              console.log(meetings);
+              console.log('Meeting upcoming:' + options.client_schedule[0].client_time);
+
               Cookies.remove('no meetings');
               var meetingTime = options.client_schedule[0].client_time;
               var time = moment(meetingTime, 'H:mm:ss');
@@ -107,27 +113,29 @@
                 console.log('15 Min prior to meeting: ' + meetingMinus15);
                 console.log('15 Min after meeting: ' + meetingPlus15);
 
-                if ((meetingMinus15 <= currentTime) && (currentTime < meetingPlus15)) {
+                if ((meetingMinus15 < currentTime) && (currentTime < meetingPlus15) || (meetingMinus15 == currentTime)) {
                   //                        jQuery('.welcome').addClass('transition-to');
-                  if(mode == 'slides' && upcoming == 'yes') {
-                  console.log('welcome mode time');
+                  if(mode == 'slides') {
+//                  alert('JS: welcome mode time');
                   Cookies.remove('leaving_meeting');
                   Cookies.set('mode', 'welcome');
                   Cookies.set('entering_meeting', 'yes');
 //                  alert('15 minutes before meeting');
                   clearInterval(updateTimer);
+                  clearInterval(runningClockTimer);
                   location.reload();
 
                   }
 
-                } else if ((currentTime == meetingPlus15) || ((meetingMinus15 < currentTime > meetingPlus15))) {
+                } else if ((currentTime == meetingPlus15) || (currentTime > meetingPlus15)) {
                 if(mode != 'slides') {
-                  console.log('slide mode time');
+//                  alert('JS: slide mode time');
                   Cookies.remove('entering_meeting');
                   Cookies.set('mode', 'slides');
                   Cookies.set('leaving_meeting', 'yes');
 //                  alert('15 after before meeting');
                   clearInterval(updateTimer);
+                  clearInterval(runningClockTimer);
                   location.reload();
                 }
                 } else if(currentTime < meetingMinus15 && mode != 'slides'){
@@ -136,6 +144,7 @@
                   Cookies.set('mode', 'slides');
 //                  alert('switching back to slide mode');
                   clearInterval(updateTimer);
+                  clearInterval(runningClockTimer);
                   location.reload();
                 }
 
@@ -243,12 +252,14 @@
           }
         }
 
+
+        updateACF()
+        var updateTimer = setInterval(updateACF, 60000);
+
         $(window).load(function () {
 
-          updateACF()
 
-          var updateTimer = setInterval(updateACF, 600000);
-          var updateTimer = setInterval(runningClock, 1000);
+          var runningClockTimer = setInterval(runningClock, 1000);
 
 //          console.time('Slack Update');
           loadEmoji();

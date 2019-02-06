@@ -179,7 +179,7 @@ function smores_numeric_pagination($custom_query = false, $classes = '')
 
 if( function_exists('acf_add_options_page') ) {
 
-    acf_add_options_page(array('page_title' => 'Site Options', 'icon_url' =>'dashicons-admin-generic','position' => '2'));
+//    acf_add_options_page(array('page_title' => 'Site Options', 'icon_url' =>'dashicons-admin-generic','position' => '2'));
 }
 
 
@@ -530,11 +530,11 @@ function change_admin_color($result) {
 
 function add_display_options_widget() {
 
-    wp_add_dashboard_widget(
-                 'display_options_widget',         // Widget slug.
-                 'Display Options',         // Title.
-                 'display_options_widget_function' // Display function.
-        );
+//    wp_add_dashboard_widget(
+//                 'display_options_widget',         // Widget slug.
+//                 'Display Options',         // Title.
+//                 'display_options_widget_function' // Display function.
+//        );
 }
 add_action( 'wp_dashboard_setup', 'add_display_options_widget' );
 
@@ -549,11 +549,11 @@ function display_options_widget_function() {?>
 
 function add_display_clients_widget() {
 
-    wp_add_dashboard_widget(
-                 'display_clients_widget',         // Widget slug.
-                 'Clients',         // Title.
-                 'display_clients_widget_function' // Display function.
-        );
+//    wp_add_dashboard_widget(
+//                 'display_clients_widget',         // Widget slug.
+//                 'Clients',         // Title.
+//                 'display_clients_widget_function' // Display function.
+//        );
 }
 add_action( 'wp_dashboard_setup', 'add_display_clients_widget' );
 

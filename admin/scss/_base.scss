@@ -1,170 +1,192 @@
-body,
-p,
-li,
-#wpadminbar *,
-body.wp-autoresize {
-    font-family: 'Gotham', 'Avenir Next', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+// Write Theme Specific Admin Styles Here
+//Gutenberg Styles
+.edit-post-layout__content .edit-post-visual-editor {
+  background: white;
+
+  p, li {
+    font-family: 'ITC Caslon 224 Std';
+  }
+}
+
+
+
+.editor-post-title__block .editor-post-title__input {
+  font-family: 'ITC Caslon 224 Std', 'ITC Caslon No.224', 'Adobe Garamond Pro', 'Garamond', 'Baskerville', "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
+  font-size: 3.25rem;
+  text-transform: none;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: black;
+}
+
+.wp-block-heading h1, .wp-block-heading h2, .wp-block-heading h3, .wp-block-heading h4, .wp-block-heading h5, .wp-block-heading h6 {
+  font-family: 'Champion', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -.01em;
+  line-height: .9;
+  padding-top: .1em;
+  color: $primaryaccent !important;
+  font-weight: 500;
+}
+
+.wp-block-heading {
+  h1.editor-rich-text__tinymce {
+    font-size: 6rem;
+    line-height: .9;
+  }
+
+  h2.editor-rich-text__tinymce {
+    font-size: 5.5rem;
+    line-height: .9;
+  }
+
+  h3.editor-rich-text__tinymce {
+    font-size: 5rem;
+    line-height: .9;
+  }
+
+  h4.editor-rich-text__tinymce {
+    font-size: 4.5rem;
+    line-height: .9;
+  }
+
+  h5.editor-rich-text__tinymce {
+    font-size: 4rem;
+    line-height: .9;
+  }
+
+  h6.editor-rich-text__tinymce {
+    font-size: 3.5rem;
+    line-height: .9;
+  }
+}
+
+body:not(.mce-content-body) {
+  figure.wp-block-pullquote {
+    border: none;
+    border-left: 6px solid #f26724;
+    font: italic 1.6em/1.6em 'ITC Caslon 224 Std', 'ITC Caslon No.224', 'MrsEaves', 'Adobe Garamond Pro', 'Garamond', 'Baskerville', "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
+    margin: 1.5em 0;
+    padding: 1em 1em .25em 1.5em;
+
+    p {
+      font-weight: 900 !important;
+      font: inherit;
+      font-size: 28px !important;
+      line-height: 1.6 !important;
+    }
+
+    .wp-block-pullquote__citation {
+      font-style: normal;
+      font-family: 'Champion', 'League Gothic', 'Arial Narrow', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: -.01em;
+      line-height: .9;
+      color: $primaryaccent;
+      font-size: 28px;
+      font-weight: 500;
+    }
+  }
+
+  .wp-block-button__link, .wp-block-file .wp-block-file__button {
+    display: inline-block;
+    font-family: 'Champion', 'League Gothic', 'Arial Narrow', sans-serif;
+    //  font-weight: 900;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    /* padding: 0.556em 2.222em; */
+    padding: 0.35rem 0.5rem 0.2rem;
+    margin: 0.25rem 0;
     font-weight: normal;
-    //    letter-spacing: -.025em;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-.login label,
-.wp-core-ui .button,
-.wp-core-ui .button-primary,
-.wp-core-ui .button-secondary {
-    font-family: 'Gotham', 'Avenir Next', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    font-weight: bold !important;
-}
-.login label {
-    color: #ffffff;
-    font-weight: normal !important;
-}
-.admin-color-midnight #wp-admin-bar-user-info .avatar {
-    border-radius: 100px;
-    border: 3px solid #eee;
-}
-.admin-color-midnight #wpadminbar,
-#wpadminbar * {
-    line-height: 36px;
-}
-#adminmenu .awaiting-mod,
-#adminmenu .update-plugins {
-    line-height: 15px;
-}
-#adminmenu li .awaiting-mod span,
-#adminmenu li span.update-plugins span {
-    line-height: 14px;
-}
-#login {
+    text-decoration: none;
+    min-width: 148px;
+    text-align: left;
+    color: #fff;
+    transition: 0.2s ease;
+    border-radius: 2px;
+    outline: none;
+    text-align: center;
+    border-radius: 0;
+    font-weight: 500;
+
+    i {}
+
+    &:hover {}
+  }
+
+  .read-more-btn, .wp-block-file .wp-block-file__button, .wp-block-button__link:not(.has-background) {
+    background: $primaryaccent;
+    border: 4px double $primaryaccent;
+
+    i {}
+
+    &:hover {
+      color: $primaryaccent !important;
+      border-color: $primaryaccent;
+      background: none;
+    }
+  }
+
+  .wp-block-file .wp-block-file__button {
+    margin: 0 1rem;
+  }
+
+  .wp-block-quote {
     position: relative;
     z-index: 1;
-}
-.login h1 a {
-    background: none !important;
-    margin-bottom: 10px;
-    background-size: auto 100% !important;
-    width: 100%;
-}
-.login h1:after {
-    background-image: url(../../admin/img/FIWI-classic-website.svg) !important;
-}
-#wpfooter {
-    width: 300px;
-    background-image: url(../../admin/img/FIWI-classic-website-grey.svg);
-    background-size: 300px auto;
-    background-position: 50%;
-    background-repeat: no-repeat;
-}
-#wpfooter p,
-#wpfooter a {
-    color: rgba(0, 0, 0, 0);
-}
-.wp-admin #wpadminbar #wp-admin-bar-site-name>.ab-item:before {
-    color: rgba(0, 0, 0, 0) !important;
-    background: url(../../admin/img/admin-logo.png) !important;
-    background-size: auto 100% !important;
-    background-repeat: no-repeat !important;
-    background-position: 50% !important;
-}
-.acf-field .acf-label label {
-    line-height: 2 !important;
-}
-#adminmenu li.current a.menu-top,
-#adminmenu li.wp-has-current-submenu .wp-submenu .wp-submenu-head,
-#adminmenu li.wp-has-current-submenu a.wp-has-current-submenu,
-.folded #adminmenu li.current.menu-top {
-    //    background: #F2B02A;
-}
-.fiwi-redirected-user.login h1 a {
-    filter: brightness(100) !important;
-}
-@media screen and (max-width: 782px) {}
-@font-face {
-    font-family: 'Knockout';
-    src: url('../../admin/fonts/Knockout-HTF47-Bantamweight.otf');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Gotham';
-    src: url('../../admin/fonts/Gotham-Light.otf');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Gotham';
-    src: url('../../admin/fonts/Gotham-Bold.otf');
-    font-weight: bold;
-    font-style: normal;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5, #titlediv #title {
-    color: #eb3a24;
-    text-transform: uppercase;
-    font-size: 2rem !important;
-    font-family: 'Knockout';
-    font-weight: normal !important;
-    line-height: 1.5 !important;
-}
-
-#titlediv #title {
-
-    font-size: 3rem !important;
-}
-.form-table th,
-.form-wrap label .wp-core-ui .button,
-.wp-core-ui .button-primary,
-.wp-core-ui .button-secondary, .acf-tab-group li a, .wp-core-ui p .button, .wp-core-ui .button-primary {
-    font-family: 'Knockout';
-    font-weight: normal !important;
-    text-transform: uppercase;
-    text-shadow: none !important;
-}
-.wrap .page-title-action {
-
-    font-family: 'Knockout';
-    font-weight: normal !important;
-    text-transform: uppercase;
-    text-shadow: none !important;
-//        vertical-align: baseline;
-    font-size: 1.5rem;//    height: auto;
-    line-height: 1.25;
-    vertical-align: middle;
-    top: -7px;
-}
-.acf-tab-group li a {
-    font-size: 1.25rem !important;
-    font-family: 'Knockout';
-    font-weight: normal !important;
-//    line-height: 1.5 !important;
-
-}
-#update-nag, .update-nag {
-//    font-family: 'MrsEaves';
-//    font-weight: normal !important;
-////    text-transform: uppercase;
-//    text-shadow: none !important;
-//    font-size: 1.5rem !important;
-}
-#adminmenu .wp-submenu-head,
-#adminmenu a.menu-top {
-//    line-height: 1.35;
-}
-.wp-core-ui p .button,
-.wp-core-ui .button-primary {
-    vertical-align: baseline;
+    display: block;
+    margin: 1.5rem 3rem;
     font-size: 1.5rem;
-    height: auto;
-    padding: 2px 10px;
-}
-.acf-field select {
-    padding: 2px 10px !important;
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1.25;
+    //  color: var(--brand);
+    letter-spacing: -.02em;
+    border: none !important;
+
+    p {
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      font-family: 'ITC Caslon 224 Std', 'ITC Caslon No.224', 'Adobe Garamond Pro', 'Garamond', 'Baskerville', "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
+      font-weight: 900;
+    }
+
+    .wp-block-quote__citation {
+      font-style: normal;
+      font-family: 'Champion', 'League Gothic', 'Arial Narrow', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: -.01em;
+      line-height: .9;
+      color: $primaryaccent;
+      font-weight: normal;
+      font-size: 2.5rem;
+    }
+
+    &:before,
+    &:after {
+      top: 50%;
+      font-size: 5rem;
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      transform: translateY(-60%);
+      height: auto;
+      display: block;
+      position: absolute;
+      z-index: -2;
+      opacity: 0.65;
+    }
+
+    &:before {
+      left: -3rem;
+      content: '{';
+    }
+
+    &:after {
+      right: -3rem;
+      content: '}';
+    }
+  }
 }

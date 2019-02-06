@@ -27,9 +27,9 @@ if($ip == '67.9.125.106'):
 
     ?>
 
-    <?php 
-    if(get_field('refresh', 'options')): update_field( 'refresh', null, 'options' ); endif; /* Why is this php expression in a <script>? */ 
-    ?>  
+    <?php
+    if(get_field('refresh', 'options')): update_field( 'refresh', null, 'options' ); endif; /* Why is this php expression in a <script>? */
+    ?>
 
     <script>
         'use strict';
@@ -85,8 +85,8 @@ if($ip == '67.9.125.106'):
         <div id="wrapper" class="welcome">
             <?php  // Check if Schedule Meetings are present
             if( have_rows('client_schedule', 'options') ) { ?>
-                <?php 
-                $counter == 0; 
+                <?php
+                $counter == 0;
                 while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
                     <?php $counter++; // Compare Scheduled Meeting Times against current time
                     if($counter == 1):
@@ -161,15 +161,15 @@ if($ip == '67.9.125.106'):
                                 <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
                                     <source src="<?php the_sub_field('client_video');?>">
                                 </video>
-                            <?php 
+                            <?php
                             } elseif ($welcomeType == 'image') { ?>
                                 <img class="bg" src="<?php $attachment_id = get_sub_field('client_image'); $size = "full"; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
-                            <?php 
+                            <?php
                             } else { ?>
                                 <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
                                     <source src="<?php echo get_template_directory_uri(); ?>/src/video/clouds-small.mp4" type="video/mp4">
                                 </video>
-                            <?php 
+                            <?php
                             } ?>
                             <?php $color = get_sub_field('bg_color'); $opacity = get_sub_field('background_opacity');?>
                             <div id="overlay" <?php if(get_sub_field('bg_color') || get_sub_field('background_opacity')): echo 'style="background-color: ' . $color . '; opacity: ' . $opacity . '"'; endif;?>></div>
@@ -182,7 +182,7 @@ if($ip == '67.9.125.106'):
                                     </div>
                                 </div>
                             </div> <?php /* found non-closed div tag */?>
-                        <?php 
+                        <?php
                         } else { ?>
                         <?php //update_field( 'override_slide_mode', 'No', 'options' ); delete_row('client_schedule', 1, 'options');
 
@@ -206,7 +206,7 @@ if($ip == '67.9.125.106'):
                         // location.reload();
                         </script>
                         <?php }?>
-                    <?php endif; 
+                    <?php endif;
                 endwhile ; wp_reset_postdata();
                 $mode = get_field('override_slide_mode', 'options');
                 if(($lesstime < $currentTime) && ($meetingOut == 'yes') && ($time < $currentTime)):
@@ -225,7 +225,7 @@ if($ip == '67.9.125.106'):
                 <?php // if no other upcoming meetings switch back to Slide Mode
             } ?>
         </div>
-    <?php 
+    <?php
     } else { ?>
         <div class="fade">
             <?php
@@ -240,7 +240,7 @@ if($ip == '67.9.125.106'):
                                 <h2>Arrivals</h2>
                             </div>
                         </div>
-                        <?php 
+                        <?php
                         while ( have_rows('client_schedule', 'options') ) : the_row();
 
                             $time = strtotime(get_sub_field('client_time', 'options')) - 900;
@@ -325,12 +325,12 @@ if($ip == '67.9.125.106'):
                         <?php endwhile; ?>
                     </div>
                 </div>
-            <?php 
+            <?php
             endif; ?>
             <?php $slides = get_field('slide_order', 'options'); ?>
-            <?php $noslides = 0; 
+            <?php $noslides = 0;
             foreach( $slides as $slide ): $noslides++;?>
-                <?php 
+                <?php
                 if($noslides % 3 == 0) {
 
                     $calendarId = 'findsomewinmore.com_393732373830313435@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
@@ -353,7 +353,7 @@ if($ip == '67.9.125.106'):
 
                             <?php
                             $currentTime = strtotime(current_time( 'H:i:s'));
-                            $i = 0; 
+                            $i = 0;
                             foreach ($events->getItems() as $event):
                                 $meetingtime = $event->getStart()->getDateTime();
                                 $currentTime = date('g:i');
@@ -374,11 +374,11 @@ if($ip == '67.9.125.106'):
                                             <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
                                         </div>
                                     </div>
-                                <?php endif; 
+                                <?php endif;
                             endforeach;?>
                         </div>
                     </div>
-                    <?php endif; 
+                    <?php endif;
                 } elseif($noslides % 5 == 0){
 
                     $calendarId = 'findsomewinmore.com_343531313332303332@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
@@ -402,7 +402,7 @@ if($ip == '67.9.125.106'):
                                 </div>
                                 <?php
                                 $currentTime = strtotime(current_time( 'H:i:s'));
-                                $i = 0; 
+                                $i = 0;
                                 foreach ($events->getItems() as $event):
                                     $meetingtime = $event->getStart()->getDateTime();
                                     $currentTime = date('g:i');
@@ -422,15 +422,15 @@ if($ip == '67.9.125.106'):
                                             <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
                                         </div>
                                     </div>
-                                    <?php 
-                                    endif; 
+                                    <?php
+                                    endif;
                                 endforeach;?>
                             </div>
                         </div>
-                    <?php 
+                    <?php
                     endif;
                 } elseif($noslides % 4 == 0) {
-                    
+
                     $json = file_get_contents('https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true&pretty=true');
                     $obj = json_decode($json);
                     ?>
@@ -442,7 +442,7 @@ if($ip == '67.9.125.106'):
                                 <h2>Flight Status</h2>
 
                                 <ul class="members-status">
-                                    <?php 
+                                    <?php
                                     foreach($obj->members as $member):
                                         if(($member->deleted == false) && ($member->is_bot == false) && ($member->real_name != 'slackbot')):
 
@@ -469,17 +469,17 @@ if($ip == '67.9.125.106'):
 
                                             </li>
 
-                                        <?php 
-                                        endif; 
+                                        <?php
+                                        endif;
                                     endforeach;?>
                                 </ul>
                             </div>
-                        </div>          
+                        </div>
 
                     </div>
-                <?php 
+                <?php
                 } elseif($noslides % 6 == 0){ ?>
-                    <?php 
+                    <?php
                     if( have_rows('client_schedule', 'options') ): ?>
                         <div class="slide schedule client video" data-attr="6000">
 
@@ -489,7 +489,7 @@ if($ip == '67.9.125.106'):
                                     <h2>Today's Meetings</h2>
                                 </div>
                             </div>
-                            <?php 
+                            <?php
                             while ( have_rows('client_schedule', 'options') ) : the_row(); ?>
                                 <?php
 
@@ -543,12 +543,12 @@ if($ip == '67.9.125.106'):
                                         <input class="hero dark XXL time" data-src="<?php $meetingtime = strtotime(get_sub_field('client_time')); echo date('g:i a', $meetingtime); ?>">
                                     </div>
                                 </div>
-                            <?php 
+                            <?php
                             endwhile; ?>
                         </div>
                     </div>
                     <?php endif; ?>
-                <?php 
+                <?php
                 } else {?>
 
                     <?php if(get_field('client_logo', $slide->ID)):?>
@@ -565,16 +565,16 @@ if($ip == '67.9.125.106'):
                                 <div class="slide image" data-attr="30000">
                                 <img src="<?php $attachment_id = get_sub_field('image'); $size = " large "; $image = wp_get_attachment_image_src( $attachment_id, $size ); echo $image[0];?>">
                                 </div>
-                            <?php 
+                            <?php
                             } elseif ( get_row_layout() == 'client_video' || get_row_layout() == 'video' ) { ?>
                                 <div <?php /** If get Video Slide length **/ $videoLength = get_sub_field('video_length'); if($videoLength == '30000' || $videoLength == '60000'){?> data-attr='<?php echo $videoLength;?>' <?php }?> class="slide video client <?php if(get_sub_field('contain_video')): echo 'contain'; endif;?><?php if($videoLength == 'Full Video') { ?> video-full<?php }?>" <?php if(get_sub_field('video_bg_color')): echo 'style="background-color:' . get_sub_field('video_bg_color') . '"'; endif;?>>
                                     <video id="video-<?php $var = sanitize_title_for_query( get_the_title($slide->ID) ); echo esc_attr( $var);?>" autoplay  muted preload="none" src="<?php the_sub_field('video');?>">
                                 </div>
-                            <?php 
+                            <?php
                             } // Endif Layout == Client Video
                             // End of Client Slide repeater
-                        endwhile; 
-                    endif; 
+                        endwhile;
+                    endif;
                 }
             // End foreach of selected clients for Slide Mode rotation
             endforeach; ?>

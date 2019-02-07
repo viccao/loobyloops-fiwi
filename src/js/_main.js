@@ -357,7 +357,7 @@
               var options = {
                 align: 'right',
                 width: spaceCount,
-                timing: 100
+                timing: 1000
 //                timing: timing
               }
               $(this).flapper(options).val(text).change();

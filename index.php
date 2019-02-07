@@ -17,7 +17,7 @@
 
 $ip = $_SERVER['REMOTE_ADDR'];
 
-if($ip == '67.9.125.106'):
+if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
     get_template_part('templates/head');
 
     $meetingOut = $_COOKIE['leaving_meeting'];
@@ -360,21 +360,23 @@ if($ip == '67.9.125.106'):
                                 $meetingtimeComp = date('g:i', strtotime($meetingtime));
                                 // $currentTimeComp = date('g:i', strtotime($currentTime));
 
-                                if($meetingtimeComp > $currentTime): $i;
-                                elseif(($i < 4) && ($meetingtimeComp < $currentTime)): $i++;
+//                                if($meetingtimeComp > $currentTime): $i;
+//                                elseif(($i < 4) && ($meetingtimeComp < $currentTime)): $i++;
 
                                     // echo 'Meeting Time:' . $meetingtimeComp;
                                     // echo '<br>Current Time:' . $currentTime;
                                     ?>
                                     <div class="row">
-                                        <div class="col-md-10 client-name">
-                                            <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
+                                        <div class="col-md-9 client-name">
+                                            <!-- <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>"> -->
+                                            <h2><?php echo $event->getSummary();?></h2>
                                         </div>
-                                        <div class="col-md-2 client-time">
+                                        <div class="col-md-3 client-time">
                                             <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
                                         </div>
                                     </div>
-                                <?php endif;
+                                <?php
+//                            endif;
                             endforeach;?>
                         </div>
                     </div>
@@ -408,22 +410,23 @@ if($ip == '67.9.125.106'):
                                     $currentTime = date('g:i');
                                     $meetingtimeComp = date('g:i', strtotime($meetingtime));
                                     // $currentTimeComp = date('g:i', strtotime($currentTime));
-                                    if($meetingtimeComp > $currentTime): $i;
-                                    elseif(($i < 4) && ($meetingtimeComp < $currentTime)): $i++;
+//                                    if($meetingtimeComp > $currentTime): $i;
+//                                    elseif(($i < 4) && ($meetingtimeComp < $currentTime)): $i++;
 
                                     // echo 'Meeting Time:' . $meetingtimeComp;
                                     // echo '<br>Current Time:' . $currentTime;
                                     ?>
                                     <div class="row">
-                                        <div class="col-md-10 client-name">
-                                            <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>">
+                                        <div class="col-md-9 client-name">
+                                            <!-- <input class="hero dark XXL title" data-src="<?php echo $event->getSummary();?>"> -->
+                                            <h2><?php echo $event->getSummary();?></h2>
                                         </div>
-                                        <div class="col-md-2 client-time">
+                                        <div class="col-md-3 client-time">
                                             <input class="hero dark XXL time" data-src="<?php echo date('g:i a', strtotime($meetingtime)); ?>">
                                         </div>
                                     </div>
                                     <?php
-                                    endif;
+//                                    endif;
                                 endforeach;?>
                             </div>
                         </div>

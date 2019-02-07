@@ -10,23 +10,6 @@ const sourcemaps = require('gulp-sourcemaps');
 const jsImport = require('gulp-js-import');
 //const emojiText = require("emoji-text");
 
-// browser-sync task for starting the server.
-gulp.task('browser-sync', function() {
-    //watch files
-    var files = [
-    './dist/css/styles.min.css',
-    './*.php'
-    ];
-
-    //initialize browsersync
-    browserSync.init(files, {
-    //browsersync with a php server
-    proxy: "http://lobbyloops.local/",
-    notify: false
-    });
-});
-
-
 
 // CSS task
 gulp.task('styles', () => {
@@ -107,7 +90,7 @@ gulp.task('images', () => {
 });
 
 // Build task
-gulp.task('build', ['styles', 'admin-styles', 'browser-sync', 'scripts', 'modernizr', 'images', 'fonts']);
+gulp.task('build', ['styles', 'admin-styles', 'scripts', 'modernizr', 'images', 'fonts']);
 gulp.task('prod', ['styles', 'admin-styles', 'scripts', 'modernizr', 'images', 'fonts']);
 
 // Watch task

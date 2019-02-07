@@ -329,25 +329,25 @@
           if ($('.slide[data-slick-index="' + nextSlide + '"]').attr('id') == 'flight-status') {}
           if ($('.slide[data-slick-index="' + nextSlide + '"]').hasClass('board')) {
             $('.flapper').remove();
-            $('.slide[data-slick-index="' + nextSlide + '"] input.hero.title').each(function () {
-              var text = $(this).attr('data-src');
-              var spaceCount = text.length;
+//             $('.slide[data-slick-index="' + nextSlide + '"] input.hero.title').each(function () {
+//               var text = $(this).attr('data-src');
+//               var spaceCount = text.length;
 
-              if(spaceCount > 35){
+//               if(spaceCount > 35){
 
-                spaceCount = 35;
-              }
-              console.log(spaceCount);
+//                 spaceCount = 35;
+//               }
+//               console.log(spaceCount);
 
-              var timing = Math.floor(Math.random() * 300) + 100;
-              var options = {
-                align: 'left',
-                width: spaceCount,
-                timing: timing
-//                timing: timing
-              }
-              $(this).flapper(options).val(text).change();
-            });
+//               var timing = Math.floor(Math.random() * 300) + 100;
+//               var options = {
+//                 align: 'left',
+//                 width: spaceCount,
+//                 timing: timing
+// //                timing: timing
+//               }
+//               $(this).flapper(options).val(text).change();
+//             });
             $('.slide[data-slick-index="' + nextSlide + '"] input.hero.time').each(function () {
               var text = $(this).attr('data-src');
               var spaceCount = text.length;

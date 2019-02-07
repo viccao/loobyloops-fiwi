@@ -450,7 +450,7 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
                                 <ul class="members-status">
                                     <?php
                                     foreach($obj->members as $member):
-                                        if(($member->deleted == false) && ($member->is_bot == false) && ($member->real_name != 'slackbot')):
+                                        if(($member->deleted == false) && ($member->is_bot == false) && ($member->name != 'slackbot')):
 
                                             $status = $member->profile->status_text;
                                             $presence = $member->presence;

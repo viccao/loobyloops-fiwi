@@ -265,7 +265,8 @@
           loadEmoji();
           watchSlack();
 
-        })
+        });
+
         $('.fade').slick({
           //                    draggable: false,
           arrows: false,

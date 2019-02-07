@@ -228,7 +228,13 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
     <?php
     } else { ?>
         <div class="fade">
+
+            <?php $slides = get_field('slide_order', 'options'); ?>
+            <?php $noslides = 0;
+            foreach( $slides as $slide ): $noslides++;?>
+
             <?php
+            if($noslides % 4 == 0):
             if( have_rows('client_schedule', 'options') ): ?>
                 <div class="slide schedule schedule client board" data-attr="6000">
                     <video autoplay="autoplay" loop="" muted="muted" id="bgvid">
@@ -252,9 +258,6 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
                             $meetingtimeCompAfter = date('H:i', $meetingtimeAfter);
 
                             ?>
-                            <script>
-                                console.log("Meeting time: ' . $meetingtimeDisplay . ', Current time: ' . $currentTime . '");
-                            </script>
 
                             <?php
 
@@ -320,17 +323,16 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
                                     <h2><?php remove_filter ('acf_the_content', 'wpautop'); echo get_sub_field('client_name', false, false);?></h2>
                                 </div>
                                 <div class="col-md-3 client-time">
-                                    <input class="hero dark XXL time" data-src="<?php echo $$meetingtimeDisplay;?>">
+                                    <input class="hero dark XXL time" data-src="<?php echo $meetingtimeDisplay;?>">
                                 </div>
                             </div>
                         <?php endwhile; ?>
                     </div>
                 </div>
             <?php
-            endif; ?>
-            <?php $slides = get_field('slide_order', 'options'); ?>
-            <?php $noslides = 0;
-            foreach( $slides as $slide ): $noslides++;?>
+            endif; endif;?>
+
+
                 <?php
                 if($noslides % 3 == 0) {
 

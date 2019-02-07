@@ -245,7 +245,7 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
 
                             $time = strtotime(get_sub_field('client_time', 'options')) - 900;
                             $currentTime = date('H:i');
-                            $meetingtime = strtotime(get_sub_field('client_time'));
+                            $meetingtime = strtotime(get_sub_field('client_time', 'options'));
                             $meetingtimeAfter = strtotime(get_sub_field('client_time', 'options')) + 900;
                             $meetingtimeDisplay = date('H:i a', $meetingtime);
                             $meetingtimeComp = date('H:i', $time);
@@ -316,10 +316,11 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
 
                             <div class="row">
                                 <div class="col-md-9 client-name">
-                                    <input class="hero dark XXL title" data-src="<?php remove_filter ('acf_the_content', 'wpautop'); echo get_sub_field('client_name', false, false);?>">
+
+                                    <h2><?php remove_filter ('acf_the_content', 'wpautop'); echo get_sub_field('client_name', false, false);?></h2>
                                 </div>
                                 <div class="col-md-3 client-time">
-                                    <input class="hero dark XXL time" data-src="<?php echo $meetingtimeDisplay; ?>">
+                                    <input class="hero dark XXL time" data-src="<?php echo $$meetingtimeDisplay;?>">
                                 </div>
                             </div>
                         <?php endwhile; ?>

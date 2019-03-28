@@ -438,9 +438,9 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
                 } elseif($noslides % 4 == 0) {
 
                     $json = file_get_contents('https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true&pretty=true');
-                    $obj = json_decode($json, true);
+                    $obj = json_decode($json);
 
-                    if (!empty($obj)):
+                    if ($obj->ok == true):
                     ?>
                     <div class="slide schedule schedule client board" data-attr="20000" id="flight-status" style="background: none;">
 

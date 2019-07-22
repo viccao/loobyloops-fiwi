@@ -336,7 +336,7 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
                 <?php
                 if($noslides % 3 == 0) {
 
-                    $calendarId = 'findsomewinmore.com_393732373830313435@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
+                    $calendarId = 'account@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
                     $optParams = array(
                         'maxResults' => 99,
                         'singleEvents' => TRUE,
@@ -386,7 +386,7 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
                     <?php endif;
                 } elseif($noslides % 5 == 0){
 
-                    $calendarId = 'findsomewinmore.com_343531313332303332@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
+                    $calendarId = 'account@resource.calendar.google.com'; //NOT primary!! , but the email of calendar creator that you want to view
                     $optParams = array(
                         'maxResults' => 99,
                         'singleEvents' => TRUE,

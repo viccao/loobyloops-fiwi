@@ -437,7 +437,7 @@ if($ip == '67.9.125.106' || $ip == '172.23.0.1'):
                     endif;
                 } elseif($noslides % 4 == 0) {
 
-                    $json = file_get_contents('https://slack.com/api/users.list?token=xoxp-3921626273-114425188213-401339713923-9e939340d027352b450c1e6fdf421ce6&presence=true&pretty=true');
+                    $json = file_get_contents('https://slack.com/api/users.list?token=XXXX-XXXX-XXXX-XXXX-XXXX&presence=true&pretty=true');
                     $obj = json_decode($json);
 
                     if ($obj->ok == true):
